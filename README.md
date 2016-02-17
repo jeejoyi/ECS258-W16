@@ -1,5 +1,7 @@
 # ECS258-W16
-Software Defined Congestion and Back-off
+Software Defined Congestion and Back-off Simulation (SDCBS)
+
+Version: 0.0.1
 
 Author: Hiu Hong Yu, Josiah Jee, Francesco Capponi
 
