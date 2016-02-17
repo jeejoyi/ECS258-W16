@@ -17,6 +17,7 @@ class Sensor1(Master_Client):
 		Master_Client.__init__(self, "127.0.0.1")
 		self.min_threshold = min_threshold
 		self.max_threshold = max_threshold
+		self.send_rate = None
 	
 	def detection(self):
 		# this code can by sensor input
@@ -47,6 +48,15 @@ class Sensor1(Master_Client):
 	def process_received_message(self, received_message):
 		# do nothing for now
 		print(received_message)
+		# decode the received message
+		decoded_data = json.loads(received_message)
+		# update assoicate value
+		for var_name, value in decoded_data:
+			try:
+				eval("self.{name} = {val}".format(name = var_name, val = value))
+			except NameError:
+				# error on var_name, just ignore it
+				pass
 
 	def run(self):
 		while(1):
