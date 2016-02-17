@@ -4,6 +4,7 @@
 import os
 import sys
 import socket
+import json
 
 #3rd party libraries
 
@@ -12,11 +13,13 @@ import macro
 
 class Master_Client(object):
 	def __init__(self, destination, port = 5005, buffer = 1024, priority = macro.PRIORITY_LOW):
+		# master class variable
 		self.destination = destination
 		self.port = port
 		self.buffer_size = buffer
 		self.priority = priority
-		self.threshold = None
+		self.min_threshold = None
+		self.max_threshold = None
 
 		self.sock = None
 		self.server_address = (self.destination, self.port)
@@ -38,22 +41,19 @@ class Master_Client(object):
 	def send_data(self, message):
 		# try:
 			# Send data
-		self.sock.sendall(message)
+		encoded_data = json.dumps(message)
+		self.sock.sendall(encoded_data)
 		# except:
 		# 	raise AssertionError
 
 	def receive_data(self):
-		pass
-		# s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		# s.bind((self.destination, self.port))
-		# s.listen(1)
-
-		# conn, addr = s.accept()
-
-		# data = conn.recv(BUFFER_SIZE)
-		# if data:
-		# 	conn.send(data)  # echo
-		# conn.close()
+		# receive a package
+		data = self.sock.recv(self.buffer_size)
+		# if the message in the package is just ack, ignore it
+		if data == "ACK":
+			return None
+		else: #if something other than ACK, return it so sensor can process the message
+			return data
 
 	def set_priority(self, new_proiority):
 		self.priority = new_proiority
