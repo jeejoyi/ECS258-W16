@@ -1,5 +1,5 @@
 # ECS258-W16
-Software Defined Congestion and Back-off Simulation (SDCBS)
+Software Defined Congestion Control Simulation (SDCCS)
 
 Version: 0.0.1
 
