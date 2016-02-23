@@ -12,18 +12,18 @@ import json
 import macro
 
 class Master_Client(object):
-	def __init__(self, destination, port = 5005, buffer = 1024, priority = macro.PRIORITY_LOW):
+	def __init__(self, destination, port = 5005, buffer_size = 1024, priority = macro.PRIORITY_LOW):
 		# master class variable
 		self.destination = destination
 		self.port = port
-		self.buffer_size = buffer
+		self.buffer_size = buffer_size
 		self.priority = priority
 		self.min_threshold = None
 		self.max_threshold = None
 
 		self.sock = None
 		self.server_address = (self.destination, self.port)
-
+		print("here")
 		# connect to the server
 		self.connect()
 

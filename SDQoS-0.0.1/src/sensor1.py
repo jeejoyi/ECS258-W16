@@ -31,7 +31,7 @@ class Sensor1(Master_Client):
 	def apply_policy(self, input_data):
 		# if the detection distance is > 0 and < 200 true else false
 		if self.min_threshold < input_data < self.max_threshold:
-			return {"distance": float(input_data)}, True
+			return {"priority": self.priority, "data": float(input_data)}, True
 		return None, False
 
 	def decision(self, input_data):
@@ -63,6 +63,7 @@ class Sensor1(Master_Client):
 			try:
 				# try capture data from sensor
 				captured_data = self.detection()
+				print("hi")
 				# if captured data from sensor
 				if captured_data:
 					self.decision(captured_data)
@@ -75,6 +76,7 @@ class Sensor1(Master_Client):
 if __name__ == '__main__':
 	s1 = Sensor1(0, 200)
 	try:
+		print("here")
 		s1.run()
 	finally:
 		s1.disconnect()
