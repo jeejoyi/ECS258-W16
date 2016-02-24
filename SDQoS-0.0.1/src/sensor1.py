@@ -23,15 +23,13 @@ class Sensor1(Master_Client):
 		# this code can by sensor input
 		# random distance
 		# sample random distance from 1cm to 200cm
-		if random.randint(-2000000,2000000) > 0:
-			return True
-
-		return False
+		distance = random.uniform(0, 200000)
+		return distance
 
 	def apply_policy(self, input_data):
 		# if the detection distance is > 0 and < 200 true else false
 		if self.min_threshold < input_data < self.max_threshold:
-			return {"priority": self.priority, "data": float(input_data)}, True
+			return float(input_data), True
 		return None, False
 
 	def decision(self, input_data):
@@ -41,42 +39,32 @@ class Sensor1(Master_Client):
 			#send filtered data
 			self.send_data(filtered_data)
 
-		received_message = self.receive_data()
-		if received_message != None:
-			self.process_received_message(received_message)
+		# received_message = self.receive_data()
+		# if received_message != None:
+		# 	self.process_received_message(received_message)
 
-	def process_received_message(self, received_message):
-		# do nothing for now
-		print(received_message)
-		# decode the received message
-		decoded_data = json.loads(received_message)
-		# update assoicate value
-		for var_name, value in decoded_data:
-			try:
-				eval("self.{name} = {val}".format(name = var_name, val = value))
-			except NameError:
-				# error on var_name, just ignore it
-				pass
+	def update_setting(self, settings):
+		if settings and settings["operation"] == "w":
+			setting = settings["data"]
 
 	def run(self):
 		while(1):
 			try:
 				# try capture data from sensor
 				captured_data = self.detection()
-				print("hi")
+				# print(captured_data)
 				# if captured data from sensor
 				if captured_data:
 					self.decision(captured_data)
 
 				#check if theres any data received from the server side
-				# self.receive_data()
+				self.update_setting(self.receive_data())
 			except KeyboardInterrupt:
 				break
 
 if __name__ == '__main__':
 	s1 = Sensor1(0, 200)
 	try:
-		print("here")
 		s1.run()
 	finally:
 		s1.disconnect()

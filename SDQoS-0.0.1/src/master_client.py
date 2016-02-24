@@ -5,6 +5,9 @@ import os
 import sys
 import socket
 import json
+import select
+import errno
+from time import sleep
 
 #3rd party libraries
 
@@ -18,12 +21,9 @@ class Master_Client(object):
 		self.port = port
 		self.buffer_size = buffer_size
 		self.priority = priority
-		self.min_threshold = None
-		self.max_threshold = None
 
 		self.sock = None
 		self.server_address = (self.destination, self.port)
-		print("here")
 		# connect to the server
 		self.connect()
 
@@ -34,29 +34,57 @@ class Master_Client(object):
 
 		# Connect the socket to the port where the server is listening
 		self.sock.connect(self.server_address)
+		self.sock.setblocking(0)
 
 	def disconnect(self):
 		self.sock.close()
 
-	def send_data(self, message):
-		# try:
+	def send_data(self, data):
+		try:
 			# Send data
-		encoded_data = json.dumps(message)
-		self.sock.sendall(encoded_data)
-		# except:
-		# 	raise AssertionError
+			encoded_data = json.dumps({"operation": "r", "priority": self.priority,
+									   "data": data
+									  })
+			self.sock.sendall(encoded_data)
+		except socket.error, e:
+			return 
 
+	# http://stackoverflow.com/questions/16745409/what-does-pythons-socket-recv-return-for-non-blocking-sockets-if-no-data-is-r
 	def receive_data(self):
 		# receive a package
-		data = self.sock.recv(self.buffer_size)
-		# if the message in the package is just ack, ignore it
-		if data == "ACK":
+		try:
+			message = self.sock.recv(1024)
+			return self.process_received_message(message)
+		except socket.error, e:
+			err = e.args[0]
+			if err == errno.EAGAIN or err == errno.EWOULDBLOCK:
+				sleep(0.001)
+				# print 'No data available'
+				return None
+			# else:
+			# 	print e
+			# 	sys.exit(1)
+
+	def process_received_message(self, received_message):
+		# decode the received message
+		try:
+			decoded_data = json.loads(received_message)
+			print(decoded_data)
+			# sys.exit(0)
+			if decoded_data["operation"] == "w":
+				if "priority" in decoded_data.keys():
+					self.set_priority(decoded_data["priority"])
+
+			return decoded_data
+		except ValueError:
 			return None
-		else: #if something other than ACK, return it so sensor can process the message
-			return data
 
 	def set_priority(self, new_proiority):
 		self.priority = new_proiority
 
-	def set_threshold(self, new_threshold):
-		self.threshold = new_threshold
+	# def set_threshold(self, new_threshold):
+	# 	self.threshold = new_threshold
+
+
+
+
