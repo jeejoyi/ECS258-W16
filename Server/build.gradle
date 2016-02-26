@@ -15,10 +15,11 @@ dependencies {
 dependencies {
     compile 'io.netty:netty-all:4.1.0.CR2'
     compile 'com.google.guava:guava:19.0'
+    compile 'com.google.code.gson:gson:2.4'
 
 }
 
-task(server, dependsOn: jar, type: JavaExec) {
-    main = 'Server'
+task(run, dependsOn: jar, type: JavaExec) {
+    main = 'Main'
     classpath = sourceSets.main.runtimeClasspath
 }

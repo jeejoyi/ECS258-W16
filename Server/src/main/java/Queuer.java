@@ -9,7 +9,8 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  */
 public class Queuer {
 
-    public static Integer THRESHOLD = 80; // per cent
+    public static Integer THRESHOLD_ACTIVATE = 80; // per cent
+    public static Integer THRESHOLD_DEACTIVATE = 70; // per cent
 
     public static Integer PRIORITIES = 10; // per cent
 
@@ -40,7 +41,7 @@ public class Queuer {
     }
 
     private Boolean canInsert(DataToProcess dataToProcess) {
-        if (MemoryInfo.freePercentage() > THRESHOLD) {
+        if (MemoryInfo.freePercentage() > THRESHOLD_ACTIVATE) {
             // if we can't free memory to insert the current one, we can't insert it
             if (deleteALowerPriority(dataToProcess.priority) == false)
                 return false;

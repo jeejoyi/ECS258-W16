@@ -1,3 +1,5 @@
+import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 import io.netty.channel.*;
 
 import java.net.InetAddress;
@@ -10,6 +12,8 @@ import java.util.Date;
 @ChannelHandler.Sharable
 public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
+    private static final JsonParser parser = new JsonParser();
+        private static final Gson GSON = new Gson();
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         // Send greeting for a new connection.
@@ -20,27 +24,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String request) throws Exception {
-        // Generate and write a response.
-        String response;
-        boolean close = false;
-        if (request.isEmpty()) {
-            response = "Please type something.\r\n";
-        } else if ("bye".equals(request.toLowerCase())) {
-            response = "Have a good day!\r\n";
-            close = true;
-        } else {
-            response = "Did you say '" + request + "'?\r\n";
-        }
 
-        // We do not need to write a ChannelBuffer here.
-        // We know the encoder inserted at TelnetPipelineFactory will do the conversion.
-        ChannelFuture future = ctx.write(response);
-
-        // Close the connection after sending 'Have a good day!'
-        // if the client has sent 'bye'.
-        if (close) {
-            future.addListener(ChannelFutureListener.CLOSE);
-        }
     }
 
     @Override

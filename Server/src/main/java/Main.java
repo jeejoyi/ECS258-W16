@@ -12,8 +12,7 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
  * Created by fre on 2/16/16.
  */
 public class Main {
-    static final boolean SSL = System.getProperty("ssl") != null;
-    static final int PORT = Integer.parseInt(System.getProperty("port", SSL ? "8992" : "8023"));
+    static final int PORT = Integer.parseInt("8023");
 
     public static void main(String[] args) throws Exception {
 
