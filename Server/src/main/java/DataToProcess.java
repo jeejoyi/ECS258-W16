@@ -5,10 +5,16 @@ import java.util.Date;
  */
 public class DataToProcess {
     Date timestamp;
+    String operation;
     Object data;
     Integer priority;
+    String sensor;
 
     DataToProcess() {
         timestamp = new Date();
+    }
+
+    void setSensor(String sensor) {
+        this.sensor = sensor;
     }
 }

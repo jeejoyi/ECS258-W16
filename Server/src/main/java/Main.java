@@ -12,7 +12,7 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
  * Created by fre on 2/16/16.
  */
 public class Main {
-    static final int PORT = Integer.parseInt("8023");
+    static final int PORT = 5005;
 
     public static void main(String[] args) throws Exception {
 

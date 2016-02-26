@@ -1,9 +1,9 @@
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.netty.channel.*;
 
-import java.net.InetAddress;
-import java.util.Date;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by fre on 2/16/16.
@@ -11,20 +11,22 @@ import java.util.Date;
 
 @ChannelHandler.Sharable
 public class ServerHandler extends SimpleChannelInboundHandler<String> {
+    private final static ConcurrentHashMap<String, Channel> remoteToSensor = new ConcurrentHashMap<>();
 
     private static final JsonParser parser = new JsonParser();
-        private static final Gson GSON = new Gson();
+    private static final Gson GSON = new Gson();
+
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        // Send greeting for a new connection.
-        ctx.write("Welcome to " + InetAddress.getLocalHost().getHostName() + "!\r\n");
-        ctx.write("It is " + new Date() + " now.\r\n");
-        ctx.flush();
+        remoteToSensor.put(ctx.name(), ctx.channel());
     }
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String request) throws Exception {
-
+        final JsonObject json = (JsonObject) parser.parse(request);
+        final DataToProcess obj = GSON.fromJson(json, DataToProcess.class);
+        QueuerManager.getInstance().getQueuer().push(obj);
     }
 
     @Override
