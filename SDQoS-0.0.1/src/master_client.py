@@ -21,6 +21,7 @@ class Master_Client(object):
 		self.port = port
 		self.buffer_size = buffer_size
 		self.priority = priority
+		self.priority_threshold = 10
 
 		self.sock = None
 		self.server_address = (self.destination, self.port)
@@ -41,11 +42,13 @@ class Master_Client(object):
 
 	def send_data(self, data):
 		try:
-			# Send data
-			encoded_data = json.dumps({"operation": "r", "priority": self.priority,
-									   "data": data
-									  })
-			self.sock.sendall(encoded_data)
+			# if the sensor priority is within server accept priority range
+			if self.priority <= self.priority_threshold:
+				# Send data
+				encoded_data = json.dumps({"operation": "r", "priority": self.priority,
+										   "data": data
+										  })
+				self.sock.sendall(encoded_data)
 		except socket.error, e:
 			return 
 
