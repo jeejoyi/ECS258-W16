@@ -32,6 +32,6 @@ public class MemoryInfo {
         long allocatedMemory = runtime.totalMemory();
         long freeMemory = runtime.freeMemory();
 
-        return freeMemory / maxMemory;
+        return freeMemory *100 / maxMemory;
     }
 }

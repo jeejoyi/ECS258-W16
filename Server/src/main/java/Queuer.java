@@ -20,10 +20,16 @@ public class Queuer {
         NOT_INSERTED
     }
 
-    ConcurrentHashMap<Integer, ConcurrentLinkedDeque<DataToProcess>> queues;
+    ConcurrentHashMap<Integer, ConcurrentLinkedDeque<DataToProcess>> queues = new ConcurrentHashMap<>();
 
     private void freeMemory() {
 
+    }
+
+    public Queuer() {
+        for (Integer i = 0; i < PRIORITIES; i++) {
+            queues.put(i, new ConcurrentLinkedDeque<>());
+        }
     }
 
 

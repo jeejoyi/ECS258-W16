@@ -27,6 +27,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         final JsonObject json = (JsonObject) parser.parse(request);
         final DataToProcess obj = GSON.fromJson(json, DataToProcess.class);
         QueuerManager.getInstance().getQueuer().push(obj);
+        System.out.println("Data Received");
     }
 
     @Override
