@@ -1,5 +1,5 @@
 # ECS258-W16
-Software Defined Congestion Control Simulation (SDCCS)
+Software Defined Congestion Control Simulation for Multilevel Data in IoT Systems
 
 Version: 0.0.1
 
