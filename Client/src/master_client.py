@@ -47,7 +47,7 @@ class Master_Client(object):
 				# Send data
 				encoded_data = json.dumps({"operation": "r", "priority": self.priority,
 										   "data": data
-										  })
+										  }) + "\n"
 				self.sock.sendall(encoded_data)
 		except socket.error, e:
 			return 

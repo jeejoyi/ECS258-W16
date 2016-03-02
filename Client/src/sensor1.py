@@ -82,7 +82,7 @@ class Sensor1(Master_Client):
 				break
 
 if __name__ == '__main__':
-	if len(sys.argv) != 4:
+	if len(sys.argv) != 5:
 		print("Usage: python sensor1.py <priority> <uniform time range> <lambda>\n")
 		sys.exit(-1)
 
