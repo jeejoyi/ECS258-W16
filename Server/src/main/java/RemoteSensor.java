@@ -30,7 +30,7 @@ public class RemoteSensor {
     public int getScore() {
         return priorityMagnitude;
     }
-    
+
     /**
      * Push some data in its queue
      */
@@ -73,7 +73,14 @@ public class RemoteSensor {
      * Tells to the client that can send messages with an lower priority
      */
     public void decreasePriority() {
-        --priority;
+        decreasePriority(1);
+    }
+
+    /**
+     * Tells to the client that can send messages with an lower priority
+     */
+    public void decreasePriority(int levels) {
+        priority -= levels;
         sendSetPriority();
     }
 
