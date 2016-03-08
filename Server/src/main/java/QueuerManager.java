@@ -1,8 +1,11 @@
 public class QueuerManager {
 
-    public static Integer THRESHOLD_ACTIVATE = 80; // per cent
-    public static Integer THRESHOLD_DEACTIVATE = 70; // per cent
+    public static Integer THRESHOLD_ACTIVATE = 70; // per cent
+    public static Integer THRESHOLD_FORCE_FREE = 80; // per cent
+    public static Integer THRESHOLD_DEACTIVATE = 60; // per cent
     public static Integer PRIORITIES = 10; // per cent
+
+    private boolean activate_decreasing_priority = false;
 
     /**
      * Singleton
@@ -38,32 +41,54 @@ public class QueuerManager {
 
     }
 
+    public void softenIncomingTraffic(int levels) {
+        RemoteSensorManager remoteSensorManager = RemoteSensorManager.getInstance();
+        for (RemoteSensor remoteSensor : remoteSensorManager.getRemoteSensorsList()) {
+            remoteSensor.decreasePriority(levels);
+        }
+    }
+
+    public void softenIncomingTraffic() {
+        softenIncomingTraffic(1);
+    }
+
+    public void increaseIncomingTraffic() {
+        RemoteSensorManager remoteSensorManager = RemoteSensorManager.getInstance();
+        for (RemoteSensor remoteSensor : remoteSensorManager.getRemoteSensorsList()) {
+            remoteSensor.increasePriority();
+        }
+    }
 
     /**
      * Push a packet in the queue if possible
      *
      * @param fromChannel
-     * @param dataToProcess
+     * @param packet
      */
-    public void pushPacket(String fromChannel, DataToProcess dataToProcess) {
+    public void pushPacket(String fromChannel, DataToProcess packet) {
         // implement the policy of a new insertion
-        if (dataToProcess.priority >= PRIORITIES) {
+        if (packet.priority >= PRIORITIES) {
             // you can't insert data with a priority higher than the highest allowed
             return;
         }
-        dataToProcess.sensor = fromChannel;
+        packet.sensor = fromChannel;
 
         //1) check if memory over the limit
         //2) if yes, delete the one with the highest memory usage
         //2.1) take action and send to the sensor the to backoff
         //3) insert new packet
 
-        if (MemoryInfo.freePercentage() > THRESHOLD_ACTIVATE) {
-
+        if (MemoryInfo.freePercentage() > THRESHOLD_FORCE_FREE) {
+            freeFor(packet);
+            // heavily decrease the traffic
+            softenIncomingTraffic(2);
         }
 
-        RemoteSensorManager.getInstance().getRemoteSensor(fromChannel).push(dataToProcess);
+        if (!activate_decreasing_priority && MemoryInfo.freePercentage() > THRESHOLD_ACTIVATE) {
+            softenIncomingTraffic();
+        }
 
+        RemoteSensorManager.getInstance().getRemoteSensor(fromChannel).push(packet);
     }
 
 
