@@ -1,3 +1,18 @@
+/.gradle/2.2
+/.idea/libraries
+/.idea/modules.xml
+/build
+/.idea/.name
+/.idea/compiler.xml
+/.idea/copyright
+/.idea/gradle.xml
+/.idea/misc.xml
+/.gradle/2.10
+/.idea/vcs.xml
+/.idea/encodings.xml
+/.gradle
+/.idea
+/.idea/workspace.xml
 /gradle
 .gradle/
 .idea/
@@ -5,4 +20,5 @@
 build/
 *.class
 *.iml
+/ECS258.iml
 
