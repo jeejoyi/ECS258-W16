@@ -13,6 +13,10 @@ public class Queuer {
     public static Integer THRESHOLD_DEACTIVATE = 70; // per cent
 
     public static Integer PRIORITIES = 10; // per cent
+    private int packetsForPriority[] = new int[10];
+    private long currentPacketsInQueue = 0;
+
+    private long memoryUsage = 0;
 
     enum PUSH_RESPONSE {
         INSERTED,
@@ -28,7 +32,7 @@ public class Queuer {
 
     public Queuer() {
         for (Integer i = 0; i < PRIORITIES; i++) {
-            queues.put(i, new ConcurrentLinkedDeque<>());
+            queues.put(i, new ConcurrentLinkedDeque<DataToProcess>());
         }
     }
 
@@ -62,15 +66,22 @@ public class Queuer {
         return true;
     }
 
-    public void push(DataToProcess dataToProcess) {
-        if (dataToProcess.priority >= PRIORITIES) {
+    public void push(DataToProcess packet) {
+        if (packet.priority >= PRIORITIES) {
             // you can't insert data with a priority higher than the highest allowed
             return;
         }
-        if (canInsert(dataToProcess)) {
-            ConcurrentLinkedDeque<DataToProcess> q = queues.get(dataToProcess.priority);
+        if (canInsert(packet)) {
+            ConcurrentLinkedDeque<DataToProcess> q = queues.get(packet.priority);
             synchronized (q) {
-                q.addFirst(dataToProcess);
+                // Add memory usage
+                memoryUsage += ObjectSizeFetcher.getObjectSize(packet.data);
+
+                // Increase the number of packets in the queue
+                ++packetsForPriority[packet.priority];
+                ++currentPacketsInQueue;
+
+                q.addFirst(packet);
             }
         }
     }
@@ -98,6 +109,39 @@ public class Queuer {
             return null;
         }
         ConcurrentLinkedDeque<DataToProcess> q = queues.get(eldest.priority);
-        return q.removeLast();
+        DataToProcess packet = q.removeLast();
+        // Decrease memory usage
+        memoryUsage -= ObjectSizeFetcher.getObjectSize(packet.data);
+
+        // Decrease the number of packets in the queue
+        --packetsForPriority[packet.priority];
+        --currentPacketsInQueue;
+
+        return packet;
+    }
+
+    // ################### GETTERS ###################
+
+    /**
+     * Getter packetsForPriority
+     * returns an array with the count of the packets in each queue
+     */
+    public int[] getPacketsForPriority() {
+        return packetsForPriority;
+    }
+
+    /**
+     * Getter memory usage in bytes
+     * returns how much memory it is currently using
+     */
+    public long getMemoryUsage() {
+        return memoryUsage;
+    }
+
+    /**
+     * Return the number of packets currently in the queue
+     */
+    public long getCurrentPacketsInQueue() {
+        return currentPacketsInQueue;
     }
 }

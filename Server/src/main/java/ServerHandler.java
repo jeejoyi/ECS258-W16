@@ -11,7 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @ChannelHandler.Sharable
 public class ServerHandler extends SimpleChannelInboundHandler<String> {
-    private final static ConcurrentHashMap<String, Channel> remoteToSensor = new ConcurrentHashMap<>();
 
     private static final JsonParser parser = new JsonParser();
     private static final Gson GSON = new Gson();
@@ -19,14 +18,14 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        remoteToSensor.put(ctx.name(), ctx.channel());
+        RemoteSensorManager.getInstance().addSensorChannel(ctx);
     }
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String request) throws Exception {
         final JsonObject json = (JsonObject) parser.parse(request);
         final DataToProcess obj = GSON.fromJson(json, DataToProcess.class);
-        QueuerManager.getInstance().getQueuer().push(obj);
+        QueuerManager.getInstance().pushPacket(ctx.name(), obj);
         System.out.println("Data Received");
     }
 
