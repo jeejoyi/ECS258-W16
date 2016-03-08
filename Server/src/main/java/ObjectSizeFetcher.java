@@ -1,11 +1,9 @@
+import org.github.jamm.MemoryMeter;
+
 import java.lang.instrument.Instrumentation;
 
 public class ObjectSizeFetcher {
-    private static Instrumentation instrumentation;
-
-    public static void premain(String args, Instrumentation inst) {
-        instrumentation = inst;
-    }
+    private static MemoryMeter instrumentation = new MemoryMeter();
 
     /**
      * Gets the size of an object
@@ -14,6 +12,9 @@ public class ObjectSizeFetcher {
      * @return
      */
     public static long getObjectSize(Object o) {
-        return instrumentation.getObjectSize(o);
+        if (o instanceof String) {
+            return ((String) o).length() * 4;
+        }
+        return instrumentation.measure(o);
     }
 }

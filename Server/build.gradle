@@ -13,14 +13,19 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 dependencies {
+    compile 'com.github.stephenc:jamm:0.2.5'
     compile 'io.netty:netty-all:4.1.0.CR2'
     compile 'com.google.guava:guava:19.0'
     compile 'com.google.code.gson:gson:2.4'
     compile 'jfree:jfreechart:1.0.13'
-
 }
 
 task(run, dependsOn: jar, type: JavaExec) {
     main = 'Main'
     classpath = sourceSets.main.runtimeClasspath
+}
+
+task getDeps(type: Copy) {
+    from sourceSets.main.runtimeClasspath
+    into 'runtime/'
 }

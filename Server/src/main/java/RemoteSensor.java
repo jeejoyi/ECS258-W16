@@ -18,7 +18,7 @@ public class RemoteSensor {
     // TODO can be the execution time etc
     private long time = 0;
     private Integer packetsIncomePastSecond = 0;
-    private Integer priorityMagnitude;
+    private Integer priorityMagnitude = 0;
 
     private long packetsDropped = 0;
     private long packetSizeDropped = 0;
