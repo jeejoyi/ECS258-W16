@@ -25,14 +25,15 @@ public class QueuerManager {
     public void freeFor(DataToProcess dataToProcess) {
         RemoteSensorManager remoteSensorManager = RemoteSensorManager.getInstance();
 
-
         long objectSize = dataToProcess.getMemorySize();
         while (objectSize > 0) {
             RemoteSensor highestMemorySensor = remoteSensorManager.getRemoteSensorsTopMemoryUsage();
             if (highestMemorySensor.equals(dataToProcess)) {
                 return;
             }
-            highestMemorySensor.popLeastImportant();
+
+            // pop object from other lists
+            objectSize -= highestMemorySensor.popLeastImportant();
         }
 
     }

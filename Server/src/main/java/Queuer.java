@@ -33,16 +33,19 @@ public class Queuer {
         }
     }
 
-    private void deletedALowerPriority(boolean defaultSize) {
-        deletedALowerPriority(5000 * 1000);//free 5MB
+
+    public long deletedALowerPriority() {
+        return deletedALowerPriority(10, 500 * 1000);//free 500kB
     }
 
-    private void deletedALowerPriority(final Integer priority, long size) {
-        while (size > 0) {
+    private long deletedALowerPriority(final Integer priority, final long size) {
+        long freeMemeory = 0;
+        while (freeMemeory < size) {
             DataToProcess packet = deletedALowerPriority(priority);
-            if (packet == null) return;
-            size -= packet.getMemorySize();
+            if (packet == null) return freeMemeory;
+            freeMemeory += packet.getMemorySize();
         }
+        return freeMemeory;
     }
 
     private DataToProcess deletedALowerPriority(final Integer priority) {
@@ -80,6 +83,11 @@ public class Queuer {
         return true;
     }
 
+    /**
+     * Insert a new object in the queue if possible. It frees memory if necessary
+     *
+     * @param packet
+     */
     public void push(DataToProcess packet) {
         if (packet.priority >= PRIORITIES) {
             // you can't insert data with a priority higher than the highest allowed

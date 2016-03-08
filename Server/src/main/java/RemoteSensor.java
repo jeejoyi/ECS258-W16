@@ -30,8 +30,7 @@ public class RemoteSensor {
     public int getScore() {
         return priorityMagnitude;
     }
-
-
+    
     /**
      * Push some data in its queue
      */
@@ -51,23 +50,22 @@ public class RemoteSensor {
      * Pop some data from its queue
      */
     public DataToProcess pop() {
-        // TODO decrease the stats that has been increased in pop
         DataToProcess packet = queue.pop();
-
         return packet;
     }
-
 
     /**
      * Pop least important
+     *
+     * @return freed memory
      */
-    public DataToProcess popLeastImportant() {
-        // TODO decrease the stats that has been increased in pop
-        DataToProcess packet = queue.pop();
+    public long popLeastImportant() {
+        long freedMemory = queue.deletedALowerPriority();
 
-        return packet;
+        //calls garbage collector
+        System.gc();
+        return freedMemory;
     }
-
 
     // ################### PRIORITY SETTERS ###################
 
@@ -78,7 +76,6 @@ public class RemoteSensor {
         --priority;
         sendSetPriority();
     }
-
 
     /**
      * Tells to the client that can send messages with an higher priority
