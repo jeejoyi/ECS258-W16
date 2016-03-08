@@ -37,30 +37,30 @@ public class Main {
 //        }
 
 
-        final String[] windowTitles = {"test"};
-        final String[] plotTitles = {"A"};
-        final String[] XAxisTitles = {"Time"};
-        final String[] YAxisTitles = {"%"};
-        final String[] seriesTitles = {"Usage"};
-        final float[] maxYRange = {100};
-
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                final Plots analysisPlots = new Plots(windowTitles, plotTitles, XAxisTitles,
-                        YAxisTitles, seriesTitles, maxYRange);
-
-                Timer timer = new Timer(1000, new ActionListener() {
-
-
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        analysisPlots.updateAllGraph();
-                    }
-                });
-                timer.start();
-            }
-        });
+//        final String[] windowTitles = {"test"};
+//        final String[] plotTitles = {"A"};
+//        final String[] XAxisTitles = {"Time"};
+//        final String[] YAxisTitles = {"%"};
+//        final String[] seriesTitles = {"Usage"};
+//        final float[] maxYRange = {100};
+//
+//        EventQueue.invokeLater(new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                final Plots analysisPlots = new Plots(windowTitles, plotTitles, XAxisTitles,
+//                        YAxisTitles, seriesTitles, maxYRange);
+//
+//                Timer timer = new Timer(1000, new ActionListener() {
+//
+//
+//                    @Override
+//                    public void actionPerformed(ActionEvent e) {
+//                        analysisPlots.updateAllGraph();
+//                    }
+//                });
+//                timer.start();
+//            }
+//        });
     }
 }
