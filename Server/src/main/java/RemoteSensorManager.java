@@ -16,7 +16,7 @@ public class RemoteSensorManager {
     private static RemoteSensorManager INSTANCE;
     private final ConcurrentHashMap<String, RemoteSensor> remoteToSensor = new ConcurrentHashMap<>();
     private final ConcurrentLinkedQueue<String> sensorsList = new ConcurrentLinkedQueue<>();
-    private final PriorityQueue<RemoteSensor> sensorHeap = new PriorityQueue<>(0, new Comparator<RemoteSensor>() {
+    private final PriorityQueue<RemoteSensor> sensorHeap = new PriorityQueue<>(new Comparator<RemoteSensor>() {
         @Override
         public int compare(RemoteSensor o1, RemoteSensor o2) {
             return (int) (o1.getMemoryUsage() - o2.getMemoryUsage());
