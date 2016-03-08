@@ -12,7 +12,7 @@ import org.jfree.ui.RefineryUtilities;
 /**
  * Created by CowCow on 3/8/16.
  */
-public class ServerInit {
+public class ServerInit implements Runnable {
     static final int PORT = 5005;
 
     public ServerInit() {
@@ -34,5 +34,9 @@ public class ServerInit {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
+    }
+
+    public void run()   {
+
     }
 }

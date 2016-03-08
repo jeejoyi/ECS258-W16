@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Date;
 import java.util.Random;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Created by CowCow on 3/8/16.
@@ -28,6 +30,14 @@ public class Plot {
 
         //display frame
         frames.setVisible(true);
+
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateGraph();
+            }
+        });
+        timer.start();
     }
     //update all created graph. This function still need to be implemented
     public void updateGraph()    {

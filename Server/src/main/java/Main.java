@@ -19,6 +19,13 @@ public class Main {
     static final int PORT = 5005;
 
     public static void main(String[] args) throws Exception {
+//        (new Thread(new ServerInit())).start();
+        (new Thread(new AnalysisGUI())).start();
+//        try {
+//            Thread.sleep(100);
+//        }catch (Exception e){
+//
+//        }
 
 
 //        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
