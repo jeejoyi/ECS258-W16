@@ -7,6 +7,12 @@ public class ObjectSizeFetcher {
         instrumentation = inst;
     }
 
+    /**
+     * Gets the size of an object
+     *
+     * @param o
+     * @return
+     */
     public static long getObjectSize(Object o) {
         return instrumentation.getObjectSize(o);
     }

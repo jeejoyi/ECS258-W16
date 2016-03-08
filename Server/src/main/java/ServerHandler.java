@@ -16,11 +16,24 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     private static final Gson GSON = new Gson();
 
 
+    /**
+     * Handler of a new connection
+     *
+     * @param ctx
+     * @throws Exception
+     */
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         RemoteSensorManager.getInstance().addSensorChannel(ctx);
     }
 
+    /**
+     * Handler of received messages
+     *
+     * @param ctx
+     * @param request
+     * @throws Exception
+     */
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String request) throws Exception {
         final JsonObject json = (JsonObject) parser.parse(request);
@@ -29,11 +42,18 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         System.out.println("Data Received");
     }
 
+
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
         ctx.flush();
     }
 
+    /**
+     * Handler of a potential exception
+     *
+     * @param ctx
+     * @param cause
+     */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();

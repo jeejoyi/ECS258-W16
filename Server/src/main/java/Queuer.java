@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -36,24 +33,41 @@ public class Queuer {
         }
     }
 
+    private void deletedALowerPriority(boolean defaultSize) {
+        deletedALowerPriority(5000 * 1000);//free 5MB
+    }
 
-    private boolean deleteALowerPriority(Integer priority) {
+    private void deletedALowerPriority(final Integer priority, long size) {
+        while (size > 0) {
+            DataToProcess packet = deletedALowerPriority(priority);
+            if (packet == null) return;
+            size -= packet.getMemorySize();
+        }
+    }
+
+    private DataToProcess deletedALowerPriority(final Integer priority) {
         for (Integer i = 0; i < PRIORITIES; i++) {
             ConcurrentLinkedDeque<DataToProcess> q = queues.get(i);
             if (!q.isEmpty()) {
+                DataToProcess packet = null;
                 synchronized (q) {
-                    q.removeFirst();
+                    packet = q.removeFirst();
+                    decreaseStats(packet);
                 }
-                return true;
+                return packet;
             }
         }
-        return false;
+        return null;
+    }
+
+    private boolean hasDeletedALowerPriority(final Integer priority) {
+        return deletedALowerPriority(priority) != null;
     }
 
     private Boolean canInsert(DataToProcess dataToProcess) {
         if (MemoryInfo.freePercentage() > THRESHOLD_ACTIVATE) {
             // if we can't free memory to insert the current one, we can't insert it
-            if (deleteALowerPriority(dataToProcess.priority) == false)
+            if (hasDeletedALowerPriority(dataToProcess.priority) == false)
                 return false;
             if (canInsert(dataToProcess)) {
                 return true;
@@ -74,13 +88,7 @@ public class Queuer {
         if (canInsert(packet)) {
             ConcurrentLinkedDeque<DataToProcess> q = queues.get(packet.priority);
             synchronized (q) {
-                // Add memory usage
-                memoryUsage += ObjectSizeFetcher.getObjectSize(packet.data);
-
-                // Increase the number of packets in the queue
-                ++packetsForPriority[packet.priority];
-                ++currentPacketsInQueue;
-
+                increaseStats(packet);
                 q.addFirst(packet);
             }
         }
@@ -103,6 +111,11 @@ public class Queuer {
 
     }
 
+    /**
+     * Pop the next packet to execute
+     *
+     * @return
+     */
     public DataToProcess pop() {
         DataToProcess eldest = getEldestInLine();
         if (eldest == null) {
@@ -110,15 +123,30 @@ public class Queuer {
         }
         ConcurrentLinkedDeque<DataToProcess> q = queues.get(eldest.priority);
         DataToProcess packet = q.removeLast();
+        decreaseStats(packet);
+        return packet;
+    }
+
+    // ################### STATS ###################
+    public void increaseStats(DataToProcess packet) {
+        // Add memory usage
+        memoryUsage += ObjectSizeFetcher.getObjectSize(packet.data);
+
+        // Increase the number of packets in the queue
+        ++packetsForPriority[packet.priority];
+        ++currentPacketsInQueue;
+
+    }
+
+    public void decreaseStats(DataToProcess packet) {
         // Decrease memory usage
         memoryUsage -= ObjectSizeFetcher.getObjectSize(packet.data);
 
         // Decrease the number of packets in the queue
         --packetsForPriority[packet.priority];
         --currentPacketsInQueue;
-
-        return packet;
     }
+
 
     // ################### GETTERS ###################
 

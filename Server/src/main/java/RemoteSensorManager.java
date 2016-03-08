@@ -3,8 +3,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.rmi.Remote;
-import java.util.Comparator;
-import java.util.PriorityQueue;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -24,11 +23,21 @@ public class RemoteSensorManager {
         }
     });
 
+    /**
+     * Get instance of Singleton
+     *
+     * @return instance
+     */
     public static RemoteSensorManager getInstance() {
         if (INSTANCE != null) return INSTANCE;
         return INSTANCE = new RemoteSensorManager();
     }
 
+    /**
+     * Adding a new sensor client conneciton
+     *
+     * @param channel
+     */
     public void addSensorChannel(ChannelHandlerContext channel) {
 
         RemoteSensor sensor = new RemoteSensor(channel);
@@ -36,17 +45,52 @@ public class RemoteSensorManager {
         remoteToSensor.put(channel.name(), sensor);
     }
 
-    public PriorityQueue<RemoteSensor> getRemoteSensorHeap() {
-        return sensorHeap;
-    }
 
-
+    // ################### GETTERS ###################
     public ConcurrentLinkedQueue<String> getRemoteSensorsNamesList() {
         return sensorsList;
     }
 
+    /**
+     * Returns the remote sensor class given the name (it's the network channel name).
+     * It can be retrieved throught the function @getRemoteSensorsNamesList()
+     *
+     * @param name
+     */
     public RemoteSensor getRemoteSensor(String name) {
         return remoteToSensor.get(name);
+    }
+
+    /**
+     * Returns the list of Remote Sensors
+     */
+    public List<RemoteSensor> getRemoteSensorsList() {
+        LinkedList<RemoteSensor> remoteSensors = new LinkedList<>();
+        for (String name : getRemoteSensorsNamesList()) {
+            remoteSensors.add(getRemoteSensor(name));
+        }
+        return remoteSensors;
+    }
+
+    // ################### ADVANCED MEMORY FREER ###################
+
+    /**
+     * Returns Remote Sensor with the highest usage of memory
+     */
+    public RemoteSensor getRemoteSensorsTopMemoryUsage() {
+        RemoteSensor highest = null;
+        for (RemoteSensor remoteSensor : getRemoteSensorsList()) {
+            if (highest == null || remoteSensor.getMemoryUsage() > highest.getMemoryUsage()) {
+                highest = remoteSensor;
+            }
+        }
+        return highest;
+    }
+
+
+    // ################### HEAP SECTION TO MOVE ###################
+    public PriorityQueue<RemoteSensor> getRemoteSensorHeap() {
+        return sensorHeap;
     }
 
     public RemoteSensor getNextToProcess() {
@@ -55,6 +99,7 @@ public class RemoteSensorManager {
         return rSensor;
     }
 
+    // ################### PROCESSOR TO MOVE ####################
     // Infinite loop to process next packet
     public void ProcessRemoteSensor() {
         while (true) {

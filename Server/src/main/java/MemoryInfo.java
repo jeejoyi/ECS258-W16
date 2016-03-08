@@ -5,6 +5,9 @@ import java.text.NumberFormat;
  */
 public class MemoryInfo {
 
+    /**
+     * Gets the free memory
+     */
     public static long totalFreeMemory() {
         Runtime runtime = Runtime.getRuntime();
 
@@ -22,6 +25,9 @@ public class MemoryInfo {
         return (freeMemory + (maxMemory - allocatedMemory) / 1024);
     }
 
+    /**
+     * Gets the free memory in percentage
+     */
     public static long freePercentage() {
         Runtime runtime = Runtime.getRuntime();
 
@@ -32,6 +38,6 @@ public class MemoryInfo {
         long allocatedMemory = runtime.totalMemory();
         long freeMemory = runtime.freeMemory();
 
-        return freeMemory *100 / maxMemory;
+        return freeMemory * 100 / maxMemory;
     }
 }

@@ -17,4 +17,8 @@ public class DataToProcess {
     void setSensor(String sensor) {
         this.sensor = sensor;
     }
+
+    long getMemorySize() {
+        return ObjectSizeFetcher.getObjectSize(this.data);
+    }
 }

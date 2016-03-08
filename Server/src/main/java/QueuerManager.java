@@ -1,5 +1,3 @@
-import java.util.Comparator;
-
 public class QueuerManager {
 
     public static Integer THRESHOLD_ACTIVATE = 80; // per cent
@@ -18,6 +16,27 @@ public class QueuerManager {
         if (INSTANCE != null) return INSTANCE;
         return INSTANCE = new QueuerManager();
     }
+
+    /**
+     * Decides who has to free data for the incoming process
+     *
+     * @return returns when there is enough memory freed
+     */
+    public void freeFor(DataToProcess dataToProcess) {
+        RemoteSensorManager remoteSensorManager = RemoteSensorManager.getInstance();
+
+
+        long objectSize = dataToProcess.getMemorySize();
+        while (objectSize > 0) {
+            RemoteSensor highestMemorySensor = remoteSensorManager.getRemoteSensorsTopMemoryUsage();
+            if (highestMemorySensor.equals(dataToProcess)) {
+                return;
+            }
+            highestMemorySensor.popLeastImportant();
+        }
+
+    }
+
 
     /**
      * Push a packet in the queue if possible
@@ -42,6 +61,9 @@ public class QueuerManager {
 
         }
 
+        RemoteSensorManager.getInstance().getRemoteSensor(fromChannel).push(dataToProcess);
+
     }
+
 
 }

@@ -58,6 +58,17 @@ public class RemoteSensor {
     }
 
 
+    /**
+     * Pop least important
+     */
+    public DataToProcess popLeastImportant() {
+        // TODO decrease the stats that has been increased in pop
+        DataToProcess packet = queue.pop();
+
+        return packet;
+    }
+
+
     // ################### PRIORITY SETTERS ###################
 
     /**
