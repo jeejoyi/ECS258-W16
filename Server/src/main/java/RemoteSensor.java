@@ -1,7 +1,6 @@
 import io.netty.channel.*;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class RemoteSensor {
 
@@ -72,24 +71,32 @@ public class RemoteSensor {
     /**
      * Tells to the client that can send messages with an lower priority
      */
-    public void decreasePriority() {
-        decreasePriority(1);
+    public void decreaseWorkingPriority() {
+        decreaseWorkingPriority(1);
     }
 
     /**
      * Tells to the client that can send messages with an lower priority
      */
-    public void decreasePriority(int levels) {
-        priority -= levels;
-        sendSetPriority();
+    public void decreaseWorkingPriority(int levels) {
+        if (priority > 0) {
+            priority -= levels;
+            sendSetPriority();
+        }
+    }
+
+    public void increaseWorkingPriority() {
+        increaseWorkingPriority(1);
     }
 
     /**
      * Tells to the client that can send messages with an higher priority
      */
-    public void increasePriority() {
-        ++priority;
-        sendSetPriority();
+    public void increaseWorkingPriority(int levels) {
+        if (priority < Queuer.PRIORITIES) {
+            priority += levels;
+            sendSetPriority();
+        }
     }
 
     // ################### NETWORK ###################

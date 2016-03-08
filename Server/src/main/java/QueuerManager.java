@@ -1,3 +1,8 @@
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 public class QueuerManager {
 
     public static Integer THRESHOLD_ACTIVATE = 70; // per cent
@@ -5,7 +10,7 @@ public class QueuerManager {
     public static Integer THRESHOLD_DEACTIVATE = 60; // per cent
     public static Integer PRIORITIES = 10; // per cent
 
-    private boolean activate_decreasing_priority = false;
+    private boolean activateIncreasingNeededPriority = false;
 
     /**
      * Singleton
@@ -18,6 +23,25 @@ public class QueuerManager {
     public static QueuerManager getInstance() {
         if (INSTANCE != null) return INSTANCE;
         return INSTANCE = new QueuerManager();
+    }
+
+    private QueuerManager() {
+        // create a timer that every second increase the priority
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!activateIncreasingNeededPriority)
+                    increaseIncomingTraffic();
+                else {
+                    // if activateIncreasingNeededPriority== true, and it is below threshold
+                    // deactivate the increasing priority policy
+                    if (MemoryInfo.freePercentage() < THRESHOLD_DEACTIVATE) {
+                        activateIncreasingNeededPriority = false;
+                    }
+                }
+            }
+        });
+        timer.start();
     }
 
     /**
@@ -44,7 +68,7 @@ public class QueuerManager {
     public void softenIncomingTraffic(int levels) {
         RemoteSensorManager remoteSensorManager = RemoteSensorManager.getInstance();
         for (RemoteSensor remoteSensor : remoteSensorManager.getRemoteSensorsList()) {
-            remoteSensor.decreasePriority(levels);
+            remoteSensor.increaseWorkingPriority();
         }
     }
 
@@ -55,7 +79,7 @@ public class QueuerManager {
     public void increaseIncomingTraffic() {
         RemoteSensorManager remoteSensorManager = RemoteSensorManager.getInstance();
         for (RemoteSensor remoteSensor : remoteSensorManager.getRemoteSensorsList()) {
-            remoteSensor.increasePriority();
+            remoteSensor.decreaseWorkingPriority();
         }
     }
 
@@ -84,7 +108,7 @@ public class QueuerManager {
             softenIncomingTraffic(2);
         }
 
-        if (!activate_decreasing_priority && MemoryInfo.freePercentage() > THRESHOLD_ACTIVATE) {
+        if (!activateIncreasingNeededPriority && MemoryInfo.freePercentage() > THRESHOLD_ACTIVATE) {
             softenIncomingTraffic();
         }
 
