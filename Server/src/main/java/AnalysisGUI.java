@@ -10,7 +10,7 @@ public class AnalysisGUI extends Frame implements Runnable {
     private static Plot[] plots;
 
     public AnalysisGUI()    {
-//        System.out.println(RemoteSensorManager.getInstance().getRemoteSensorsNamesList().size());
+        System.out.println(RemoteSensorManager.getInstance().getRemoteSensorsNamesList().size());
 //        sensorCheckBox = new Checkbox[RemoteSensorManager.getInstance().getRemoteSensorsNamesList().size()];
 //        int i = 0;
 //        for(String s: RemoteSensorManager.getInstance().getRemoteSensorsNamesList())    {
@@ -52,12 +52,13 @@ public class AnalysisGUI extends Frame implements Runnable {
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent we) {
                 dispose();
+                System.exit(0);
             }
         });
     }
 
     public void run()   {
-
+        System.out.println("GUI Started");
     }
 
 }

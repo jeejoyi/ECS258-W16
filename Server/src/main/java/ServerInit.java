@@ -16,6 +16,12 @@ public class ServerInit implements Runnable {
     static final int PORT = 5005;
 
     public ServerInit() {
+
+    }
+
+    public void run()   {
+        System.out.println("Server Started");
+
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
@@ -34,9 +40,5 @@ public class ServerInit implements Runnable {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
-    }
-
-    public void run()   {
-
     }
 }
