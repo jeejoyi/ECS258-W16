@@ -42,7 +42,7 @@ public class AnalysisGUI extends Frame implements Runnable {
                 //check to see which checkbox is checked
                 for(Checkbox cb: sensorCheckBox)    {
                     if(cb.getState() == true)  {
-                        //plot??
+                        //plot?? ya
                     }
                 }
             }
