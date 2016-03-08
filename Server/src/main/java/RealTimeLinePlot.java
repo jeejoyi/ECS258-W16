@@ -23,15 +23,22 @@ public class RealTimeLinePlot extends JPanel {
     //private class variable
     private final DynamicTimeSeriesCollection dataset;
     private final JFreeChart chart;
+    private final int numSeries;
 
     public RealTimeLinePlot(final String chartTitle, final String XAxisTitle, final String YAxisTitle,
-                            final Date current_Date, final String seriesTitle, final float maxYRange) {
+                            final Date current_Date, final float maxYRange, final int numSeries,
+                            final String[] seriesTitle) {
+        this.numSeries = numSeries;
+
+
         //init dataset as a dynamicTimeSeriesCollision class with nSeries = 1, nMoments = 1000, time sample = second
-        dataset = new DynamicTimeSeriesCollection(1, 1000, new Second());
+        dataset = new DynamicTimeSeriesCollection(numSeries, 1000, new Second());
         //X axis is based on current time in seconds
         dataset.setTimeBase(new Second(current_Date));  //somehow the min is +16 of whats the current minutes
         //add all Series into the dataset
-        dataset.addSeries(new float[1], 0, seriesTitle);
+        for(int i = 0; i < numSeries; i++)  {
+            dataset.addSeries(new float[1], i, seriesTitle[i]);
+        }
 
         //create the chart, ChartFactory is the super class of chart
         chart = ChartFactory.createTimeSeriesChart(chartTitle, XAxisTitle, YAxisTitle, dataset, true, true, false);
@@ -52,10 +59,11 @@ public class RealTimeLinePlot extends JPanel {
     }
 
     //update the graph by appending new values
-    public void update(float value) {
-        float[] newData = {value};
-//        newData[0] = value;
+    public void update(float[] value) {
+        int currentIndex = dataset.getNewestIndex();
         dataset.advanceTime();
-        dataset.appendData(newData);
+        for(int i = 0; i < this.numSeries; i++) {
+            dataset.addValue(i, currentIndex, value[i]);
+        }
     }
 }
