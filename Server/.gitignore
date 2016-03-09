@@ -16,6 +16,7 @@
 /gradle
 .gradle/
 .idea/
+*.pyc
 
 build/
 *.class
