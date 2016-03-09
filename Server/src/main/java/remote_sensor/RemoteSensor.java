@@ -1,3 +1,6 @@
+package remote_sensor;
+
+import data_type.DataToProcess;
 import io.netty.channel.*;
 
 import java.util.Calendar;
@@ -24,6 +27,7 @@ public class RemoteSensor {
     private long packetsDropped = 0;
     private long packetSizeDropped = 0;
 
+    private String name;
     // ################### QUEUE ###################
     //
 
@@ -118,6 +122,7 @@ public class RemoteSensor {
      */
     public RemoteSensor(final ChannelHandlerContext channel) {
         this.channel = channel;
+        this.name = channel.channel().id().asShortText();
     }
 
     /**
@@ -127,7 +132,20 @@ public class RemoteSensor {
         channel.writeAndFlush("{type:'set_priority', priority:'" + priority + "'}\n");
     }
 
+    /**
+     * Called when the sensor goes offline
+     */
+    public void setNetworkDead() {
+        isActive = false;
+    }
     // ################### GETTERS ###################
+
+    /**
+     * Get the identifier name
+     */
+    public String getName() {
+        return name;
+    }
 
     /**
      * Getter packetsForPriority

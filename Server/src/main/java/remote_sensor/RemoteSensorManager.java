@@ -1,8 +1,8 @@
-import com.google.common.collect.MinMaxPriorityQueue;
-import io.netty.channel.Channel;
+package remote_sensor;
+
+import graph.AnalysisGUI;
 import io.netty.channel.ChannelHandlerContext;
 
-import java.rmi.Remote;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -29,11 +29,22 @@ public class RemoteSensorManager {
      *
      * @param channel
      */
-    public void addSensorChannel(ChannelHandlerContext channel) {
+    public RemoteSensor addSensorChannel(ChannelHandlerContext channel) {
 
         RemoteSensor sensor = new RemoteSensor(channel);
         sensorsList.add(channel.channel().id().asShortText());
         remoteToSensor.put(channel.channel().id().asShortText(), sensor);
+        AnalysisGUI.getInstance().drawLayout();
+
+        return sensor;
+    }
+
+    public void removeSensorChannel(RemoteSensor remoteSensor) {
+        remoteToSensor.remove(remoteSensor.getName());
+        sensorsList.remove(remoteSensor.getName());
+        System.out.println("One queue finished, remaining:" + sensorsList.size());
+        AnalysisGUI.getInstance().drawLayout();
+
     }
 
     // ################### GETTERS ###################

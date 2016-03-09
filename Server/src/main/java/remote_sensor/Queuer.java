@@ -1,6 +1,11 @@
+package remote_sensor;
+
+import data_type.DataToProcess;
+import utility.MemoryInfo;
+import utility.ObjectSizeFetcher;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
-
 
 public class Queuer {
 
@@ -118,7 +123,7 @@ public class Queuer {
         for (Integer i = 0; i < PRIORITIES; i++) {
             ConcurrentLinkedDeque<DataToProcess> q = queues.get(i);
             if (!q.isEmpty()) {
-                if (q == null)
+                if (oldest == null)
                     oldest = q.getLast();
                 else if (oldest.timestamp.compareTo(q.getLast().timestamp) > 0) {
                     oldest = q.getLast();

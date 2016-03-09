@@ -1,5 +1,13 @@
+package processor;
 
-public class SmartProcessor extends Thread {
+import data_type.DataToProcess;
+import remote_sensor.QueuerManager;
+
+public class SmartProcessorDispatcher extends Thread {
+    public enum MODE {STUPID}
+
+    public static final MODE mode = MODE.STUPID;
+
     @Override
     public void run() {
         // Infinite loop to process next packet
@@ -20,10 +28,14 @@ public class SmartProcessor extends Thread {
     }
 
     private void processingFunction(DataToProcess packet) {
-        try {
-            this.sleep(packet.getMemorySize());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        switch (mode) {
+            case STUPID:
+                DumbProcessor.getInstance().process(packet);
+                break;
+            // in the future there will be other cases, and maybe dynamic loading of the policies
+            // probably throught a pattern observer
         }
+
     }
+
 }

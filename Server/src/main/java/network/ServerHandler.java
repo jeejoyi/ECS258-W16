@@ -1,9 +1,14 @@
+package network;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import data_type.DataToProcess;
+import graph.AnalysisGUI;
 import io.netty.channel.*;
-
-import java.util.concurrent.ConcurrentHashMap;
+import remote_sensor.QueuerManager;
+import remote_sensor.RemoteSensor;
+import remote_sensor.RemoteSensorManager;
 
 @ChannelHandler.Sharable
 public class ServerHandler extends SimpleChannelInboundHandler<String> {
@@ -19,9 +24,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
      */
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        RemoteSensorManager.getInstance().addSensorChannel(ctx);
+        RemoteSensor remoteSensor = RemoteSensorManager.getInstance().addSensorChannel(ctx);
+        QueuerManager.getInstance().addClient(remoteSensor);
         System.out.println(RemoteSensorManager.getInstance().getRemoteSensorsNamesList().size());
-        AnalysisGUI.getInstance().drawLayout();
     }
 
     /**
@@ -43,6 +48,12 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
         ctx.flush();
+    }
+
+
+    @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        RemoteSensorManager.getInstance().getRemoteSensor(ctx.channel().id().asShortText()).setNetworkDead();
     }
 
     /**
