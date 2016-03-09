@@ -1,7 +1,7 @@
 package graph;
 
-import remoteSensor.RemoteSensor;
-import remoteSensor.RemoteSensorManager;
+import remote_sensor.RemoteSensor;
+import remote_sensor.RemoteSensorManager;
 
 import javax.swing.*;
 import javax.swing.JButton;

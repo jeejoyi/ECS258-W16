@@ -1,7 +1,7 @@
 package processor;
 
-import dataType.DataToProcess;
-import remoteSensor.QueuerManager;
+import data_type.DataToProcess;
+import remote_sensor.QueuerManager;
 
 public class SmartProcessor extends Thread {
     @Override

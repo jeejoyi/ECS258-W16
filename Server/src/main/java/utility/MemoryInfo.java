@@ -1,6 +1,6 @@
 package utility;
 
-import remoteSensor.Queuer;
+import remote_sensor.Queuer;
 
 import java.text.NumberFormat;
 

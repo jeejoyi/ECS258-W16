@@ -1,4 +1,4 @@
-package remoteSensor;
+package remote_sensor;
 
 import io.netty.channel.ChannelHandlerContext;
 

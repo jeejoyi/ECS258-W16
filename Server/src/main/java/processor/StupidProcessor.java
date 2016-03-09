@@ -1,6 +1,6 @@
 package processor;
 
-import dataType.DataToProcess;
+import data_type.DataToProcess;
 
 public class StupidProcessor implements IProcessor {
 

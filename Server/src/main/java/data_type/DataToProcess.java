@@ -1,4 +1,4 @@
-package dataType;
+package data_type;
 
 import utility.ObjectSizeFetcher;
 

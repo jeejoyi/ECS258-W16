@@ -3,12 +3,12 @@ package network;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import dataType.DataToProcess;
+import data_type.DataToProcess;
 import graph.AnalysisGUI;
 import io.netty.channel.*;
-import remoteSensor.QueuerManager;
-import remoteSensor.RemoteSensor;
-import remoteSensor.RemoteSensorManager;
+import remote_sensor.QueuerManager;
+import remote_sensor.RemoteSensor;
+import remote_sensor.RemoteSensorManager;
 
 @ChannelHandler.Sharable
 public class ServerHandler extends SimpleChannelInboundHandler<String> {

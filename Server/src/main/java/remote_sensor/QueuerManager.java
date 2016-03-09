@@ -1,6 +1,6 @@
-package remoteSensor;
+package remote_sensor;
 
-import dataType.DataToProcess;
+import data_type.DataToProcess;
 import javafx.util.Pair;
 import utility.MemoryInfo;
 

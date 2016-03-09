@@ -1,13 +1,12 @@
 package graph;
 
-import remoteSensor.RemoteSensor;
-import remoteSensor.RemoteSensorManager;
+import remote_sensor.RemoteSensor;
+import remote_sensor.RemoteSensorManager;
 import utility.MemoryInfo;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Date;
-import java.util.Random;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

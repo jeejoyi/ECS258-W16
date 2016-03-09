@@ -1,6 +1,6 @@
 package processor;
 
-import dataType.DataToProcess;
+import data_type.DataToProcess;
 
 /**
  * Created by fre on 3/8/16.
