@@ -49,7 +49,7 @@ public class Plot {
     //update all created graph. This function still need to be implemented
     public void updateGraph(RemoteSensor sensor) {
         if (sensor == null) {
-            sensor = RemoteSensorManager.getInstance().getRemoteSensorsTopMemoryUsage();
+            sensor = RemoteSensorManager.getInstance().getRemoteSensorUsingMostMemory();
             float data[] = {MemoryInfo.getUsedMemory(),
                             sensor == null ? 0 : sensor.getMemoryUsage()};
             charts.update(data);
