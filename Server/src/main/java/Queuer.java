@@ -6,12 +6,12 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  */
 public class Queuer {
 
-    public static Integer THRESHOLD_ACTIVATE = 80; // per cent
-    public static Integer THRESHOLD_DEACTIVATE = 70; // per cent
+    public static final int THRESHOLD_ACTIVATE = 80; // per cent
+    public static final int THRESHOLD_DEACTIVATE = 70; // per cent
 
-    public static Integer PRIORITIES = 10; // per cent
-    private int packetsForPriority[] = new int[10];
-    private long currentPacketsInQueue = 0;
+    public static final int PRIORITIES = 10; // per cent
+    private final int packetsForPriority[] = new int[10];
+    private volatile long currentPacketsInQueue = 0;
 
     private volatile static long totalMemoryAllotted = 0;
 

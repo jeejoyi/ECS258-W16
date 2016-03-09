@@ -9,9 +9,9 @@ public class RemoteSensor {
 
 
     // Data contained
-    private Queuer queue = new Queuer();
+    private final Queuer queue = new Queuer();
 
-    private Integer priority = 0;
+    private volatile int priority = 0;
 
     // #### STATS SECTION ####
 
