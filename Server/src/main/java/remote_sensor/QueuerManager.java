@@ -55,11 +55,20 @@ public class QueuerManager {
 
     // ####################### MANAGING CLIENTS #######################
 
-
+    /**
+     * Add a client to the list of the clients that the QueuerManager has to manage
+     *
+     * @param remoteSensor
+     */
     public void addClient(RemoteSensor remoteSensor) {
         sensorHeap.add(new Pair<Long, RemoteSensor>(getExecutionTime(remoteSensor.getNextPacket()), remoteSensor));
     }
 
+    /**
+     * Remove a client to the list of the clients that the QueuerManager has to manage
+     *
+     * @param remoteSensor
+     */
     public void removeClient(RemoteSensor remoteSensor) {
     }
 
@@ -86,6 +95,12 @@ public class QueuerManager {
 
     }
 
+    /**
+     * Send the message to the clients that they need an higher level of priority to send data.
+     * This should have as consequence sending less data
+     *
+     * @param levels
+     */
     public void softenIncomingTraffic(int levels) {
         RemoteSensorManager remoteSensorManager = RemoteSensorManager.getInstance();
         for (RemoteSensor remoteSensor : remoteSensorManager.getRemoteSensorsList()) {
@@ -93,10 +108,18 @@ public class QueuerManager {
         }
     }
 
+    /**
+     * Send the message to the clients that they need an lower level of priority to send data.
+     * This should have as consequence sending more data
+     */
     public void softenIncomingTraffic() {
         softenIncomingTraffic(1);
     }
 
+    /**
+     * Send the message to the clients that they need an lower level of priority to send data.
+     * This should have as consequence sending more data
+     */
     public void increaseIncomingTraffic() {
         RemoteSensorManager remoteSensorManager = RemoteSensorManager.getInstance();
         for (RemoteSensor remoteSensor : remoteSensorManager.getRemoteSensorsList()) {
@@ -106,6 +129,12 @@ public class QueuerManager {
 
     // ################### MANAGING PUSH AND POP #######################
 
+    /**
+     * Returns a value useful to order the execution time for the specific package
+     *
+     * @param packet
+     * @return
+     */
     private long getExecutionTime(DataToProcess packet) {
         long executionTime = packet == null ? lastTimeAdded : packet.timestamp.getTime();
         lastTimeAdded = Math.min(executionTime, lastTimeAdded);
@@ -146,7 +175,9 @@ public class QueuerManager {
         RemoteSensorManager.getInstance().getRemoteSensor(fromChannel).push(packet);
     }
 
-
+    /**
+     * Return the next packet to execute
+     */
     public DataToProcess popPacket() {
         if (sensorHeap.isEmpty()) return null;
         Pair<Long, RemoteSensor> next = sensorHeap.poll();

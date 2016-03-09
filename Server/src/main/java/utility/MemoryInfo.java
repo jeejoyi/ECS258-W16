@@ -32,6 +32,11 @@ public class MemoryInfo {
         return (freeMemory + (maxMemory - allocatedMemory) / 1024);
     }
 
+    /**
+     * Returns the max memory that the queues can consume
+     *
+     * @return
+     */
     public static long getMaxMemory() {
         if (mode == MODE.DYNAMIC_JVM) {
             Runtime runtime = Runtime.getRuntime();
@@ -41,7 +46,11 @@ public class MemoryInfo {
         }
     }
 
-
+    /**
+     * Returns how many bytes the queues are consuming
+     *
+     * @return
+     */
     public static long getUsedMemory() {
         if (mode == MODE.DYNAMIC_JVM) {
             Runtime runtime = Runtime.getRuntime();
