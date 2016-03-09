@@ -10,14 +10,30 @@ public class AnalysisGUI extends Frame implements Runnable {
     private static Plot[] plots;
 
     public AnalysisGUI()    {
+        drawLayout();
+
+        //window setting
+        setSize(200, 600);
+        setTitle("Statistical Analysis");
+        setLayout(new FlowLayout());
+        setResizable(false);
+        setVisible(true);
+    }
+
+    public void run()   {
+        System.out.println("GUI Started");
+    }
+
+    private void drawLayout()   {
         System.out.println(RemoteSensorManager.getInstance().getRemoteSensorsNamesList().size());
-//        sensorCheckBox = new Checkbox[RemoteSensorManager.getInstance().getRemoteSensorsNamesList().size()];
-//        int i = 0;
-//        for(String s: RemoteSensorManager.getInstance().getRemoteSensorsNamesList())    {
-//            sensorCheckBox[i] = new Checkbox(s);
-//            add(sensorCheckBox[i]);
-//            i++;
-//        }
+        //adding all checkbox per client
+        sensorCheckBox = new Checkbox[RemoteSensorManager.getInstance().getRemoteSensorsNamesList().size()];
+        int i = 0;
+        for(String s: RemoteSensorManager.getInstance().getRemoteSensorsNamesList())    {
+            sensorCheckBox[i] = new Checkbox(s);
+            add(sensorCheckBox[i]);
+            i++;
+        }
 
         //plot button
         plotAllButton = new Button("Plot All");
@@ -25,16 +41,10 @@ public class AnalysisGUI extends Frame implements Runnable {
         plotAllButton.setBounds(150,550,50,50);
         add(plotAllButton);
 
-        //window setting
-        setSize(200,600);
-        setTitle("Statistical Analysis");
-        setLayout(new FlowLayout());
-        setResizable(false);
-        setVisible(true);
-
         //listener for button
         plotAllButton.addActionListener(new ActionListener()    {
             public void actionPerformed(ActionEvent e)  {
+                System.out.println("clicked");
                 //if theres no checkbox created
                 if(sensorCheckBox == null)  {
                     return;
@@ -55,10 +65,6 @@ public class AnalysisGUI extends Frame implements Runnable {
                 System.exit(0);
             }
         });
-    }
-
-    public void run()   {
-        System.out.println("GUI Started");
     }
 
 }
