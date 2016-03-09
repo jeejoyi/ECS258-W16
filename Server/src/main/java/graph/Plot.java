@@ -1,3 +1,9 @@
+package graph;
+
+import remoteSensor.RemoteSensor;
+import remoteSensor.RemoteSensorManager;
+import utility.MemoryInfo;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Date;

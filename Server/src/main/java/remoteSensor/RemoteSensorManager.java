@@ -1,8 +1,7 @@
-import com.google.common.collect.MinMaxPriorityQueue;
-import io.netty.channel.Channel;
+package remoteSensor;
+
 import io.netty.channel.ChannelHandlerContext;
 
-import java.rmi.Remote;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -29,11 +28,12 @@ public class RemoteSensorManager {
      *
      * @param channel
      */
-    public void addSensorChannel(ChannelHandlerContext channel) {
+    public RemoteSensor addSensorChannel(ChannelHandlerContext channel) {
 
         RemoteSensor sensor = new RemoteSensor(channel);
         sensorsList.add(channel.channel().id().asShortText());
         remoteToSensor.put(channel.channel().id().asShortText(), sensor);
+        return sensor;
     }
 
     // ################### GETTERS ###################

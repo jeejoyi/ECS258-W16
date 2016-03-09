@@ -1,3 +1,6 @@
+package remoteSensor;
+
+import dataType.DataToProcess;
 import io.netty.channel.*;
 
 import java.util.Calendar;

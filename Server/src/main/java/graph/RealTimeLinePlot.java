@@ -1,4 +1,4 @@
-/**
+package graph; /**
  * Created by CowCow on 3/1/16.
  * the following class is modified source code from trashgod from stackoverflow
  * url: http://stackoverflow.com/questions/21299096/jfreechart-how-to-show-real-time-on-the-x-axis-of-a-timeseries-chart/21307289#21307289

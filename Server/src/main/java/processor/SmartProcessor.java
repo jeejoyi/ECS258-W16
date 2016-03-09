@@ -1,3 +1,7 @@
+package processor;
+
+import dataType.DataToProcess;
+import remoteSensor.QueuerManager;
 
 public class SmartProcessor extends Thread {
     @Override
@@ -20,10 +24,8 @@ public class SmartProcessor extends Thread {
     }
 
     private void processingFunction(DataToProcess packet) {
-        try {
-            this.sleep(packet.getMemorySize());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
+
     }
+
 }

@@ -1,18 +1,6 @@
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
-import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.SslContextBuilder;
-import io.netty.handler.ssl.util.SelfSignedCertificate;
-import org.jfree.ui.RefineryUtilities;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.Timer;
+import graph.AnalysisGUI;
+import network.ServerInit;
+import processor.SmartProcessor;
 
 public class Main {
 
@@ -25,11 +13,14 @@ public class Main {
         //sleep for 1000
         try {
             Thread.sleep(1000);
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
         //now start GUI
         (new Thread(AnalysisGUI.getInstance())).start();
+
+        // starting the remote processor
+        (new SmartProcessor()).start();
     }
 }

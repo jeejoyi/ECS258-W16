@@ -1,9 +1,10 @@
+package remoteSensor;
 
+import dataType.DataToProcess;
 import javafx.util.Pair;
+import utility.MemoryInfo;
 
-import javax.swing.*;
 import javax.swing.Timer;
-import javax.xml.crypto.Data;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;

@@ -1,3 +1,8 @@
+package graph;
+
+import remoteSensor.RemoteSensor;
+import remoteSensor.RemoteSensorManager;
+
 import javax.swing.*;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;

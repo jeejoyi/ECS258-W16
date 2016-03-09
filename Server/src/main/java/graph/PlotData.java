@@ -1,3 +1,5 @@
+package graph;
+
 /**
  * Created by CowCow on 3/1/16.
  */
