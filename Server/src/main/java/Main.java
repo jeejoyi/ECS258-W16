@@ -1,6 +1,6 @@
 import graph.AnalysisGUI;
 import network.ServerInit;
-import processor.SmartProcessor;
+import processor.SmartProcessorDispatcher;
 
 public class Main {
 
@@ -21,6 +21,6 @@ public class Main {
         (new Thread(AnalysisGUI.getInstance())).start();
 
         // starting the remote processor
-        (new SmartProcessor()).start();
+        (new SmartProcessorDispatcher()).start();
     }
 }

@@ -3,7 +3,7 @@ package processor;
 import data_type.DataToProcess;
 import remote_sensor.QueuerManager;
 
-public class SmartProcessor extends Thread {
+public class SmartProcessorDispatcher extends Thread {
     public enum MODE {STUPID}
 
     public static final MODE mode = MODE.STUPID;
