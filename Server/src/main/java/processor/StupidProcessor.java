@@ -16,13 +16,20 @@ public class StupidProcessor implements IProcessor {
         return INSTANCE = new StupidProcessor();
     }
 
+    /**
+     * Avoid new
+     */
     private StupidProcessor() {
 
     }
 
-
     @Override
     public void process(DataToProcess packet) {
-
+        try {
+            // this is a random function for the execution of the queue
+            Thread.sleep(packet.getMemorySize() / 500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

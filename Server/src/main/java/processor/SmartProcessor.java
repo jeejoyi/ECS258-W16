@@ -4,6 +4,10 @@ import data_type.DataToProcess;
 import remote_sensor.QueuerManager;
 
 public class SmartProcessor extends Thread {
+    public enum MODE {STUPID}
+
+    public static final MODE mode = MODE.STUPID;
+
     @Override
     public void run() {
         // Infinite loop to process next packet
@@ -24,7 +28,13 @@ public class SmartProcessor extends Thread {
     }
 
     private void processingFunction(DataToProcess packet) {
-
+        switch (mode) {
+            case STUPID:
+                StupidProcessor.getInstance().process(packet);
+                break;
+            // in the future there will be other cases, and maybe dynamic loading of the policies
+            // probably throught a pattern observer
+        }
 
     }
 
