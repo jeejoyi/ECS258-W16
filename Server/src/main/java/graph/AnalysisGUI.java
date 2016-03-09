@@ -44,7 +44,7 @@ public class AnalysisGUI extends JFrame implements Runnable {
 
         setVisible(true);
 
-        totalMemoryUsage = new Plot("Total Memory", "Over All System Usage", "Time", "Memory Usage", maxMemory,
+        totalMemoryUsage = new Plot("Total Memory", "Over All System Usage", "Time", "Memory Usage (bytes)", maxMemory,
                                     totalMemoryPlotSeries);
         totalMemoryUsage.initialTimer(null);
     }
@@ -104,10 +104,12 @@ public class AnalysisGUI extends JFrame implements Runnable {
                     RemoteSensor sensor = RemoteSensorManager.getInstance().getRemoteSensor(s);
                     if(sensorCheckBoxes.get(s).isSelected())    {
                         //graph it
-                        String[] series = {"memory"};
-                        System.out.println(s + " is checked");
-                        sensorPlots.put(s, new Plot(s, "Usage", "Time", "Memory Usage", maxMemory, series));
-                        sensorPlots.get(s).initialTimer(sensor);
+                        if(sensorPlots.get(s) == null)  {
+                            String[] series = {"memory"};
+                            System.out.println(s + " is checked");
+                            sensorPlots.put(s, new Plot(s, "Usage", "Time", "Memory Usage (bytes)", maxMemory, series));
+                            sensorPlots.get(s).initialTimer(sensor);
+                        }
                     }
                 }
             }
