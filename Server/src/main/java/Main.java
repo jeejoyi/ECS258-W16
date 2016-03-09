@@ -25,59 +25,11 @@ public class Main {
         //sleep for 1000
         try {
             Thread.sleep(1000);
-        } catch (Exception e) {
+        }catch (Exception e){
 
         }
 
         //now start GUI
         (new Thread(AnalysisGUI.getInstance())).start();
-
-
-        //smart processor
-        (new SmartProcessor()).start();
-//
-
-
-//        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-//        EventLoopGroup workerGroup = new NioEventLoopGroup();
-//        try {
-//            ServerBootstrap b = new ServerBootstrap();
-//            b.group(bossGroup, workerGroup)
-//                    .channel(NioServerSocketChannel.class)
-//                    .handler(new LoggingHandler(LogLevel.INFO))
-//                    .childHandler(new ChannelInitializerImpl());
-//
-//            b.bind(PORT).sync().channel().closeFuture().sync();
-//        } finally {
-//            bossGroup.shutdownGracefully();
-//            workerGroup.shutdownGracefully();
-//        }
-
-
-//        final String[] windowTitles = {"test"};
-//        final String[] plotTitles = {"A"};
-//        final String[] XAxisTitles = {"Time"};
-//        final String[] YAxisTitles = {"%"};
-//        final String[] seriesTitles = {"Usage"};
-//        final float[] maxYRange = {100};
-//
-//        EventQueue.invokeLater(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                final Plots analysisPlots = new Plots(windowTitles, plotTitles, XAxisTitles,
-//                        YAxisTitles, seriesTitles, maxYRange);
-//
-//                Timer timer = new Timer(1000, new ActionListener() {
-//
-//
-//                    @Override
-//                    public void actionPerformed(ActionEvent e) {
-//                        analysisPlots.updateAllGraph();
-//                    }
-//                });
-//                timer.start();
-//            }
-//        });
     }
 }

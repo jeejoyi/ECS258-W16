@@ -1,11 +1,22 @@
-import java.awt.*;
+import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import java.awt.event.*;
+import javax.swing.JScrollPane;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.util.HashMap;
+import java.util.Map;
 
-public class AnalysisGUI extends Frame implements Runnable {
+public class AnalysisGUI extends JFrame implements Runnable {
     private static AnalysisGUI INSTANCE;
-    private static Button plotAllButton;
-    private static Checkbox[] sensorCheckBox ;
-    private static Plot[] plots;
+    private static JPanel checkBoxPanel;
+    private static JScrollPane checkboxScrollPanel;
+    private static JButton plotAllButton;
+    private static Map<String, JCheckBox> sensorCheckBoxes = new HashMap<>();
+    private static Map<String, Plot> sensorPlots = new HashMap<>();
 
     private static Plot totalMemoryUsage;
     private static String[] totalMemoryPlotSeries = {"total memory usage", "max memory usage"};
@@ -18,17 +29,18 @@ public class AnalysisGUI extends Frame implements Runnable {
     }
 
     public AnalysisGUI()    {
+        //window setting
+        setSize(200, 700);
+        setTitle("Statistical Analysis");
+        setLayout(new BorderLayout());
+        setResizable(false);
+
         drawLayout();
 
-        //window setting
-        setSize(200, 600);
-        setTitle("Statistical Analysis");
-        setLayout(new FlowLayout());
-        setResizable(false);
         setVisible(true);
 
         totalMemoryUsage = new Plot("Total Memory", "Over All System Usage", "Time", "Memory Usage", maxMemory,
-                                totalMemoryPlotSeries);
+                totalMemoryPlotSeries);
         totalMemoryUsage.initialTimer(null);
     }
 
@@ -38,44 +50,51 @@ public class AnalysisGUI extends Frame implements Runnable {
 
     public void drawLayout()   {
         //remove everything from the frame
-        removeAll();
+        getContentPane().removeAll();
         //add a title for window
+        add(new JLabel("    Select Devices to Plot"), BorderLayout.NORTH);
 
-
-        //delete object
-        plotAllButton = null;
-
-        //delete and adding all checkbox per client
-        sensorCheckBox = null;
-        sensorCheckBox = new Checkbox[RemoteSensorManager.getInstance().getRemoteSensorsNamesList().size()];
+        //add checkbox panel
+        checkBoxPanel = new JPanel();
+        checkBoxPanel.setLayout(new GridLayout(0, 2));
+//        //create N checkbox object for N sensors
+//        sensorCheckBoxes = new JCheckBox[RemoteSensorManager.getInstance().getRemoteSensorsNamesList().size()];
+        //add sensor checkbox into checkbox panel
         int i = 0;
         for(String s: RemoteSensorManager.getInstance().getRemoteSensorsNamesList())    {
             //first delete checkbox
-            sensorCheckBox[i] = new Checkbox(s);
-            add(sensorCheckBox[i]);
+            sensorCheckBoxes.put(s, new JCheckBox("Sensor "+ (i + 1)));
+            checkBoxPanel.add(sensorCheckBoxes.get(s));
+            checkBoxPanel.revalidate();
+            checkBoxPanel.repaint();
             i++;
         }
+        checkboxScrollPanel = new JScrollPane(checkBoxPanel);
+        add(checkboxScrollPanel, BorderLayout.CENTER);
 
-        //plot button
-        plotAllButton = new Button("Plot All");
 
-        //button position
-        plotAllButton.setBounds(150,550,50,50);
-        //now add the button to the frame
-        add(plotAllButton);
+        //add a plot all button
+        plotAllButton = new JButton("Plot All");
+        add(plotAllButton, BorderLayout.SOUTH);
 
-        //listener for button
+//        //listener for button
         plotAllButton.addActionListener(new ActionListener()    {
             public void actionPerformed(ActionEvent e)  {
                 System.out.println("clicked");
                 //if theres no checkbox created
-                if(sensorCheckBox == null)  {
+                if(sensorCheckBoxes == null)  {
                     return;
                 }
                 //check to see which checkbox is checked
-                for(Checkbox cb: sensorCheckBox)    {
-                    if(cb.getState() == true)  {
-                        //plot?? ya
+                for(String s: RemoteSensorManager.getInstance().getRemoteSensorsNamesList())    {
+                    //get the sensor instance
+                    RemoteSensor sensor = RemoteSensorManager.getInstance().getRemoteSensor(s);
+                    if(sensorCheckBoxes.get(s).isSelected())    {
+                        //graph it
+                        String[] series = {"memory"};
+                        System.out.println(s + " is checked");
+                        sensorPlots.put(s, new Plot(s, "Usage", "Time", "Memory Usage", maxMemory, series));
+                        sensorPlots.get(s).initialTimer(sensor);
                     }
                 }
             }
@@ -91,6 +110,7 @@ public class AnalysisGUI extends Frame implements Runnable {
 
         //must call for after redraw
         revalidate();
+        repaint();
     }
 
 }
