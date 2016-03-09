@@ -30,19 +30,36 @@ public class Plot {
 
         //display frame
         frames.setVisible(true);
+    }
 
+    //initial timer for update after creating the graph
+    public void initialTimer(final RemoteSensor sensor)   {
         Timer timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                updateGraph();
+                updateGraph(sensor);
             }
         });
         timer.start();
     }
+
+    //if needed return the charts for the frame
+    public RealTimeLinePlot getCharts() {
+        return charts;
+    }
+
     //update all created graph. This function still need to be implemented
-    public void updateGraph()    {
-        Random rand = new Random();
-        float[] data = {rand.nextInt(100)};
-        charts.update(data);
+    public void updateGraph(RemoteSensor sensor)    {
+        if(sensor == null) {
+            float data[] = {MemoryInfo.totalFreeMemory(),
+                            1};
+            charts.update(data);
+        }
+        else    {
+            float data[] = {sensor.getMemoryUsage()};
+            charts.update(data);
+        }
+
+
     }
 }

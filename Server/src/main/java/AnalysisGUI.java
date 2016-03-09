@@ -5,9 +5,20 @@ import java.awt.event.*;
  */
 
 public class AnalysisGUI extends Frame implements Runnable {
+    private static AnalysisGUI INSTANCE;
     private static Button plotAllButton;
     private static Checkbox[] sensorCheckBox ;
     private static Plot[] plots;
+
+    private static Plot totalMemoryUsage;
+    private static String[] totalMemoryPlotSeries = {"total memory usage", "max memory usage"};
+    private static float maxMemory = 999999;
+
+    //singleton
+    public static AnalysisGUI getInstance() {
+        if (INSTANCE != null) return INSTANCE;
+        return INSTANCE = new AnalysisGUI();
+    }
 
     public AnalysisGUI()    {
         drawLayout();
@@ -18,18 +29,28 @@ public class AnalysisGUI extends Frame implements Runnable {
         setLayout(new FlowLayout());
         setResizable(false);
         setVisible(true);
+
+        totalMemoryUsage = new Plot("Total Memory", "Over All System Usage", "Time", "Memory Usage", maxMemory,
+                                totalMemoryPlotSeries);
+        totalMemoryUsage.initialTimer(null);
     }
 
     public void run()   {
         System.out.println("GUI Started");
     }
 
-    private void drawLayout()   {
-        System.out.println(RemoteSensorManager.getInstance().getRemoteSensorsNamesList().size());
-        //adding all checkbox per client
+    public void drawLayout()   {
+        //remove everything from the frame
+        removeAll();
+        //delete object
+        plotAllButton = null;
+
+        //delete and adding all checkbox per client
+        sensorCheckBox = null;
         sensorCheckBox = new Checkbox[RemoteSensorManager.getInstance().getRemoteSensorsNamesList().size()];
         int i = 0;
         for(String s: RemoteSensorManager.getInstance().getRemoteSensorsNamesList())    {
+            //first delete checkbox
             sensorCheckBox[i] = new Checkbox(s);
             add(sensorCheckBox[i]);
             i++;
@@ -38,7 +59,9 @@ public class AnalysisGUI extends Frame implements Runnable {
         //plot button
         plotAllButton = new Button("Plot All");
 
+        //button position
         plotAllButton.setBounds(150,550,50,50);
+        //now add the button to the frame
         add(plotAllButton);
 
         //listener for button
@@ -65,6 +88,9 @@ public class AnalysisGUI extends Frame implements Runnable {
                 System.exit(0);
             }
         });
+
+        //must call for after redraw
+        revalidate();
     }
 
 }

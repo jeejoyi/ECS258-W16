@@ -11,11 +11,11 @@ public class RemoteSensor {
     // Data contained
     private Queuer queue = new Queuer();
 
-    private Integer priority;
+    private Integer priority = 0;
 
     // #### STATS SECTION ####
 
-    // TODO can be the execution time etc
+    // TODO can be the execution time etcs
     private long time = 0;
     private Integer packetsIncomePastSecond = 0;
     private Integer priorityMagnitude = 0;

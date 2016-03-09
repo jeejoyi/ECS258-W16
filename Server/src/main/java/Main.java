@@ -30,7 +30,7 @@ public class Main {
         }
 
         //now start GUI
-        (new Thread(new AnalysisGUI())).start();
+        (new Thread(AnalysisGUI.getInstance())).start();
 //
 
 
