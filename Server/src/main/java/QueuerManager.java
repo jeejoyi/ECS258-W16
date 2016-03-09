@@ -105,10 +105,12 @@ public class QueuerManager {
         if (MemoryInfo.usedPercentage() > THRESHOLD_FORCE_FREE) {
             freeFor(packet);
             // heavily decrease the traffic
+            System.out.println("FORCING decreasing traffic, and freeing memory for the new packet");
             softenIncomingTraffic(2);
         }
 
         if (!activateIncreasingNeededPriority && MemoryInfo.usedPercentage() > THRESHOLD_ACTIVATE) {
+            System.out.println("SUGGESTING decreasing traffic");
             softenIncomingTraffic();
         }
 

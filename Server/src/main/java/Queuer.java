@@ -10,12 +10,23 @@ public class Queuer {
     public static final int THRESHOLD_DEACTIVATE = 70; // per cent
 
     public static final int PRIORITIES = 10; // per cent
+
+    // ###### LOCAL ######
     private final int packetsForPriority[] = new int[10];
     private volatile long currentPacketsInQueue = 0;
 
-    private volatile static long totalMemoryAllotted = 0;
+    private final int packetsDroppedForPriority[] = new int[10];
+    private volatile long packetsDropped = 0;
 
-    private long memoryUsage = 0;
+    //memory
+    private volatile long memoryUsage = 0;
+
+    // ###### GLOBAL ######
+    private volatile static long totalPacketsInQueues = 0;
+    private volatile static long totalPacketsDropped = 0;
+
+    //memory
+    private volatile static long totalMemoryAllotted = 0;
 
     enum PUSH_RESPONSE {
         INSERTED,
@@ -57,7 +68,7 @@ public class Queuer {
                 DataToProcess packet = null;
                 synchronized (q) {
                     packet = q.removeFirst();
-                    decreaseStats(packet);
+                    decreaseStatsBecauseDropped(packet);
                 }
                 return packet;
             }
@@ -148,7 +159,7 @@ public class Queuer {
         // Increase the number of packets in the queue
         ++packetsForPriority[packet.priority];
         ++currentPacketsInQueue;
-
+        ++totalPacketsInQueues;
     }
 
     public void decreaseStats(DataToProcess packet) {
@@ -161,6 +172,17 @@ public class Queuer {
         // Decrease the number of packets in the queue
         --packetsForPriority[packet.priority];
         --currentPacketsInQueue;
+        --totalPacketsInQueues;
+    }
+
+
+    public void decreaseStatsBecauseDropped(DataToProcess packet) {
+        ++packetsDropped;
+        ++packetsDroppedForPriority[packet.priority];
+
+        ++totalPacketsDropped;
+
+        decreaseStats(packet);
     }
 
 
@@ -189,10 +211,35 @@ public class Queuer {
         return currentPacketsInQueue;
     }
 
+
+    /**
+     * Get the total of packets dropped for the current client
+     */
+    public long getPacketsDropped() {
+        return packetsDropped;
+    }
+
+    // ########## GLOBAL ##########
+
     /**
      * Getter memory usage in bytes used among all the clients
      */
     public static long getTotalMemoryUsed() {
         return totalMemoryAllotted;
     }
+
+    /**
+     * Get the total number of packets among all the clients
+     */
+    public static long getTotalPacketsInQueues() {
+        return totalPacketsInQueues;
+    }
+
+    /**
+     * Get the total of packets dropped among all the clients
+     */
+    public static long getTotalPacketsDropped() {
+        return totalPacketsDropped;
+    }
+
 }
