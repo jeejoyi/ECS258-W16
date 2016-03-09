@@ -94,7 +94,6 @@ public class AnalysisGUI extends JFrame implements Runnable {
 //        //listener for button
         plotAllButton.addActionListener(new ActionListener()    {
             public void actionPerformed(ActionEvent e)  {
-                System.out.println("clicked");
                 //if theres no checkbox created
                 if(sensorCheckBoxes == null)  {
                     return;
