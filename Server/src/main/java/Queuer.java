@@ -70,7 +70,7 @@ public class Queuer {
     }
 
     private Boolean canInsert(DataToProcess dataToProcess) {
-        if (MemoryInfo.freePercentage() > THRESHOLD_ACTIVATE) {
+        if (MemoryInfo.usedPercentage() > THRESHOLD_ACTIVATE) {
             // if we can't free memory to insert the current one, we can't insert it
             if (hasDeletedALowerPriority(dataToProcess.priority) == false)
                 return false;

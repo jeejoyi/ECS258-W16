@@ -13,18 +13,18 @@ public class Plot {
     private RealTimeLinePlot charts;
 
     public Plot(final String windowTitles, final String plotTitles, final String XAxisTitles,
-                 final String YAxisTitles, final float maxYRange, final String[] seriesTitles)   {
+                final String YAxisTitles, final float maxYRange, final String[] seriesTitles) {
         //set window titles
         frames = new JFrame(windowTitles);
         //set default frame closing action
 //        frames.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Dimension d = new Dimension(400,600);
+        Dimension d = new Dimension(400, 600);
         frames.setResizable(false);
 
         //create a realtimeplot
         charts = new RealTimeLinePlot(plotTitles, XAxisTitles, YAxisTitles, new Date(), maxYRange, seriesTitles.length,
-                                        seriesTitles);
-            //add the chart to the frame
+                seriesTitles);
+        //add the chart to the frame
         frames.add(charts);
         frames.pack();
 
@@ -33,7 +33,7 @@ public class Plot {
     }
 
     //initial timer for update after creating the graph
-    public void initialTimer(final RemoteSensor sensor)   {
+    public void initialTimer(final RemoteSensor sensor) {
         Timer timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -49,13 +49,12 @@ public class Plot {
     }
 
     //update all created graph. This function still need to be implemented
-    public void updateGraph(RemoteSensor sensor)    {
-        if(sensor == null) {
-            float data[] = {MemoryInfo.totalFreeMemory(),
-                            1};
+    public void updateGraph(RemoteSensor sensor) {
+        if (sensor == null) {
+            float data[] = {MemoryInfo.getUsedMemory(),
+                    1};
             charts.update(data);
-        }
-        else    {
+        } else {
             float data[] = {sensor.getMemoryUsage()};
             charts.update(data);
         }

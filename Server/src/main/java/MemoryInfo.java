@@ -40,10 +40,10 @@ public class MemoryInfo {
     }
 
 
-    public static long getFreeMemory() {
+    public static long getUsedMemory() {
         if (mode == MODE.DYNAMIC_JVM) {
-
             Runtime runtime = Runtime.getRuntime();
+            //TODO WROOONG, it is indicationg the freemoroy
             return runtime.freeMemory();
         } else {
             return Queuer.getTotalMemoryUsed();
@@ -54,7 +54,7 @@ public class MemoryInfo {
      * Gets the free memory in percentage
      */
     public static long freePercentage() {
-        return getFreeMemory() * 100 / getMaxMemory();
+        return 100 - (getUsedMemory() * 100 / getMaxMemory());
     }
 
 
