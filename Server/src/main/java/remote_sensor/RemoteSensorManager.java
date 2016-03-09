@@ -6,6 +6,7 @@ import io.netty.channel.ChannelHandlerContext;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Collectors;
 
 
 public class RemoteSensorManager {
@@ -68,10 +69,8 @@ public class RemoteSensorManager {
      * Returns the list of Remote Sensors
      */
     public List<RemoteSensor> getRemoteSensorsList() {
-        LinkedList<RemoteSensor> remoteSensors = new LinkedList<>();
-        for (String name : getRemoteSensorsNamesList()) {
-            remoteSensors.add(getRemoteSensor(name));
-        }
+        LinkedList<RemoteSensor> remoteSensors = getRemoteSensorsNamesList().stream()
+                .map(this::getRemoteSensor).collect(Collectors.toCollection(LinkedList::new));
         return remoteSensors;
     }
 
