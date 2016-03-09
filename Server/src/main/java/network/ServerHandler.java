@@ -27,7 +27,6 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         RemoteSensor remoteSensor = RemoteSensorManager.getInstance().addSensorChannel(ctx);
         QueuerManager.getInstance().addClient(remoteSensor);
         System.out.println(RemoteSensorManager.getInstance().getRemoteSensorsNamesList().size());
-        AnalysisGUI.getInstance().drawLayout();
     }
 
     /**
@@ -49,6 +48,12 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
         ctx.flush();
+    }
+
+
+    @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        RemoteSensorManager.getInstance().getRemoteSensor(ctx.channel().id().asShortText()).setNetworkDead();
     }
 
     /**

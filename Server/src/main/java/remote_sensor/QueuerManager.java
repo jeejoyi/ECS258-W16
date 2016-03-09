@@ -19,7 +19,13 @@ public class QueuerManager {
     private volatile boolean activateIncreasingNeededPriority = false;
 
     private long lastTimeAdded = 0;
-    private final PriorityQueue<Pair<Long, RemoteSensor>> sensorHeap = new PriorityQueue<>();
+    private final PriorityQueue<Pair<Long, RemoteSensor>> sensorHeap = new PriorityQueue<>(new Comparator<Pair<Long, RemoteSensor>>() {
+        @Override
+        public int compare(Pair<Long, RemoteSensor> o1, Pair<Long, RemoteSensor> o2) {
+            return (int) (o2.getKey() - o1.getKey());
+        }
+
+    });
 
     /**
      * Singleton
@@ -188,6 +194,9 @@ public class QueuerManager {
         if (packet != null || remoteSensor.isActive()) {
             long time = getExecutionTime(packet);
             sensorHeap.add(new Pair<>(lastTimeAdded, remoteSensor));
+        } else {
+            //declare that the sensor is dead, and remove from memory
+            RemoteSensorManager.getInstance().removeSensorChannel(remoteSensor);
         }
 
         return packet;

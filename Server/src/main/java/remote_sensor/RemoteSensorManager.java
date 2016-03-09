@@ -1,5 +1,6 @@
 package remote_sensor;
 
+import graph.AnalysisGUI;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.util.*;
@@ -33,7 +34,17 @@ public class RemoteSensorManager {
         RemoteSensor sensor = new RemoteSensor(channel);
         sensorsList.add(channel.channel().id().asShortText());
         remoteToSensor.put(channel.channel().id().asShortText(), sensor);
+        AnalysisGUI.getInstance().drawLayout();
+
         return sensor;
+    }
+
+    public void removeSensorChannel(RemoteSensor remoteSensor) {
+        remoteToSensor.remove(remoteSensor.getName());
+        sensorsList.remove(remoteSensor.getName());
+        System.out.println("One queue finished, remaining:" + sensorsList.size());
+        AnalysisGUI.getInstance().drawLayout();
+
     }
 
     // ################### GETTERS ###################
