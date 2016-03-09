@@ -5,6 +5,11 @@ import java.text.NumberFormat;
  */
 public class MemoryInfo {
 
+    private enum MODE {STATIC, DYNAMIC_JVM}
+
+    private final static MODE mode = MODE.STATIC;
+    private final static long staticTotalMemory = 1024 * 1024 * 100; //100MB
+
     /**
      * Gets the free memory
      */
@@ -25,19 +30,38 @@ public class MemoryInfo {
         return (freeMemory + (maxMemory - allocatedMemory) / 1024);
     }
 
+    public static long getMaxMemory() {
+        if (mode == MODE.DYNAMIC_JVM) {
+            Runtime runtime = Runtime.getRuntime();
+            return runtime.maxMemory();
+        } else {
+            return staticTotalMemory;
+        }
+    }
+
+
+    public static long getFreeMemory() {
+        if (mode == MODE.DYNAMIC_JVM) {
+
+            Runtime runtime = Runtime.getRuntime();
+            return runtime.freeMemory();
+        } else {
+            return Queuer.getTotalMemoryUsed();
+        }
+    }
+
     /**
      * Gets the free memory in percentage
      */
     public static long freePercentage() {
-        Runtime runtime = Runtime.getRuntime();
+        return getFreeMemory() * 100 / getMaxMemory();
+    }
 
-        NumberFormat format = NumberFormat.getInstance();
 
-        StringBuilder sb = new StringBuilder();
-        long maxMemory = runtime.maxMemory();
-        long allocatedMemory = runtime.totalMemory();
-        long freeMemory = runtime.freeMemory();
-
-        return freeMemory * 100 / maxMemory;
+    /**
+     * Gets the used memory in percentage
+     */
+    public static long usedPercentage() {
+        return 100 - freePercentage();
     }
 }

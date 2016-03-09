@@ -13,7 +13,7 @@ public class Queuer {
     private int packetsForPriority[] = new int[10];
     private long currentPacketsInQueue = 0;
 
-    private static long totalMemoryAllotted = 0;
+    private volatile static long totalMemoryAllotted = 0;
 
     private long memoryUsage = 0;
 
@@ -187,5 +187,12 @@ public class Queuer {
      */
     public long getCurrentPacketsInQueue() {
         return currentPacketsInQueue;
+    }
+
+    /**
+     * Getter memory usage in bytes used among all the clients
+     */
+    public static long getTotalMemoryUsed() {
+        return totalMemoryAllotted;
     }
 }

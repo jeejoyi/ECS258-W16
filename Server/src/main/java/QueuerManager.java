@@ -10,7 +10,7 @@ public class QueuerManager {
     public static Integer THRESHOLD_DEACTIVATE = 60; // per cent
     public static Integer PRIORITIES = 10; // per cent
 
-    private boolean activateIncreasingNeededPriority = false;
+    private volatile boolean activateIncreasingNeededPriority = false;
 
     /**
      * Singleton

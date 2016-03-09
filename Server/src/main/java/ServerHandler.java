@@ -14,8 +14,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     private static final JsonParser parser = new JsonParser();
     private static final Gson GSON = new Gson();
-
-
+    
     /**
      * Handler of a new connection
      *
