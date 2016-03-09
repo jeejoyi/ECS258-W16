@@ -21,7 +21,7 @@ public class Plot {
 
         //create a realtimeplot
         charts = new RealTimeLinePlot(plotTitles, XAxisTitles, YAxisTitles, new Date(), maxYRange, seriesTitles.length,
-                seriesTitles);
+                                        seriesTitles);
         //add the chart to the frame
         frames.add(charts);
         frames.pack();
