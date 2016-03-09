@@ -55,7 +55,6 @@ class Sensor1(Master_Client):
         if process and filtered_data != None:
             # send filtered data
             # self.send_data(filtered_data)
-            print ("Sending data")
             self.send_data(self.generate_random_data())
             self.random_pause_time()
 
@@ -63,9 +62,9 @@ class Sensor1(Master_Client):
         # if received_message != None:
         # 	self.process_received_message(received_message)
 
-    def update_setting(self, settings):
-        if settings and settings["operation"] == "w":
-            setting = settings["data"]
+    def update_setting(self, message):
+        if message and "operation" in message and message["operation"] == "w":
+            setting = message["data"]
 
     def run(self):
         while (1):
@@ -86,7 +85,7 @@ class Sensor1(Master_Client):
 if __name__ == '__main__':
     if len(sys.argv) != 5:
         print("Usage: python sensor1.py <address> <priority> <uniform time range> <lambda>\n")
-        print("Eg. \"python ./sensor1.py localhost 2 2 1.1\"")
+        print("Eg:\npython ./sensor1.py localhost 2 2 0.00001")
         sys.exit(-1)
 
     ip_address = sys.argv[1]
