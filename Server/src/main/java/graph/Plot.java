@@ -12,27 +12,27 @@ import java.awt.event.ActionListener;
 
 
 public class Plot {
-    private JFrame frames;
+    private JFrame frame;
     private RealTimeLinePlot charts;
 
     public Plot(final String windowTitles, final String plotTitles, final String XAxisTitles,
                 final String YAxisTitles, final float maxYRange, final String[] seriesTitles) {
         //set window titles
-        frames = new JFrame(windowTitles);
+        frame = new JFrame(windowTitles);
         //set default frame closing action
 //        frames.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Dimension d = new Dimension(400, 600);
-        frames.setResizable(false);
+        frame.setResizable(false);
 
         //create a realtimeplot
         charts = new RealTimeLinePlot(plotTitles, XAxisTitles, YAxisTitles, new Date(), maxYRange, seriesTitles.length,
                                         seriesTitles);
         //add the chart to the frame
-        frames.add(charts);
-        frames.pack();
+        frame.add(charts);
+        frame.pack();
 
         //display frame
-        frames.setVisible(true);
+        frame.setVisible(true);
     }
 
     //initial timer for update after creating the graph
@@ -64,5 +64,10 @@ public class Plot {
         }
 
 
+    }
+
+    public void exit()  {
+        frame.setVisible(false);
+        frame.dispose();
     }
 }

@@ -43,8 +43,10 @@ public class RemoteSensorManager {
         remoteToSensor.remove(remoteSensor.getName());
         sensorsList.remove(remoteSensor.getName());
         System.out.println("One queue finished, remaining:" + sensorsList.size());
+        //redraw the GUI layout
         AnalysisGUI.getInstance().drawLayout();
-
+        //close the graph window
+        AnalysisGUI.getInstance().closeGraph(remoteSensor.getName());
     }
 
     // ################### GETTERS ###################

@@ -45,7 +45,7 @@ public class AnalysisGUI extends JFrame implements Runnable {
         setVisible(true);
 
         totalMemoryUsage = new Plot("Total Memory", "Over All System Usage", "Time", "Memory Usage", maxMemory,
-                totalMemoryPlotSeries);
+                                    totalMemoryPlotSeries);
         totalMemoryUsage.initialTimer(null);
     }
 
@@ -56,24 +56,33 @@ public class AnalysisGUI extends JFrame implements Runnable {
     public void drawLayout()   {
         //remove everything from the frame
         getContentPane().removeAll();
-        //add a title for window
-        add(new JLabel("    Select Devices to Plot"), BorderLayout.NORTH);
+        //add instruction for the GUI
+        JLabel instruction = new JLabel("Select Devices to Plot");
+        //set the word to align to the center
+        instruction.setHorizontalAlignment(JLabel.CENTER);
+        //the label stick to the top
+        add(instruction, BorderLayout.NORTH);
+
 
         //add checkbox panel
         checkBoxPanel = new JPanel();
         checkBoxPanel.setLayout(new GridLayout(0, 2));
-//        //create N checkbox object for N sensors
-//        sensorCheckBoxes = new JCheckBox[RemoteSensorManager.getInstance().getRemoteSensorsNamesList().size()];
+
         //add sensor checkbox into checkbox panel
         int i = 0;
         for(String s: RemoteSensorManager.getInstance().getRemoteSensorsNamesList())    {
-            //first delete checkbox
-            sensorCheckBoxes.put(s, new JCheckBox("Sensor "+ (i + 1)));
+            //create a new checkbox object and put it into the map by device name
+            if(sensorCheckBoxes.get(s) == null){
+                sensorCheckBoxes.put(s, new JCheckBox("Sensor "+ (i + 1)));
+            }
+            //add the checkbox to the panel
             checkBoxPanel.add(sensorCheckBoxes.get(s));
+            //re configure the panel
             checkBoxPanel.revalidate();
             checkBoxPanel.repaint();
             i++;
         }
+        //add a scrollable panel with checkBox Panel
         checkboxScrollPanel = new JScrollPane(checkBoxPanel);
         add(checkboxScrollPanel, BorderLayout.CENTER);
 
@@ -116,6 +125,25 @@ public class AnalysisGUI extends JFrame implements Runnable {
         //must call for after redraw
         revalidate();
         repaint();
+    }
+
+    //close the graph if it was display
+    public void closeGraph(String name) {
+        sensorCheckBoxes.remove(name);
+        Plot usagePlot = sensorPlots.get(name);
+        //if there is a graph opened
+        if(usagePlot != null)   {
+            //close the graph
+            usagePlot.exit();
+        }
+    }
+
+    public JCheckBox getCheckBox(String name)   {
+        return sensorCheckBoxes.get(name);
+    }
+
+    public Plot getPlot(String name)    {
+        return sensorPlots.get(name);
     }
 
 }
