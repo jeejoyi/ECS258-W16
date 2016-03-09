@@ -25,6 +25,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         RemoteSensorManager.getInstance().addSensorChannel(ctx);
+        System.out.println(RemoteSensorManager.getInstance().getRemoteSensorsNamesList().size());
     }
 
     /**
@@ -39,7 +40,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         final JsonObject json = (JsonObject) parser.parse(request);
         final DataToProcess obj = GSON.fromJson(json, DataToProcess.class);
         QueuerManager.getInstance().pushPacket(ctx.name(), obj);
-        System.out.println("Data Received");
+        System.out.println("Data Received " + ctx.name());
     }
 
 
