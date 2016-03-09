@@ -1,8 +1,6 @@
 import java.text.NumberFormat;
 
-/**
- * Created by fre on 2/23/16.
- */
+
 public class MemoryInfo {
 
     private enum MODE {STATIC, DYNAMIC_JVM}

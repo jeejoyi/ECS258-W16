@@ -13,6 +13,7 @@ public class RemoteSensor {
 
     private volatile int priority = 0;
 
+    private volatile boolean isActive = true;
     // #### STATS SECTION ####
 
     // TODO can be the execution time etcs
@@ -50,6 +51,14 @@ public class RemoteSensor {
      */
     public DataToProcess pop() {
         DataToProcess packet = queue.pop();
+        return packet;
+    }
+
+    /**
+     * Get next to execute without popping
+     */
+    public DataToProcess getNextPacket() {
+        DataToProcess packet = queue.getNextToProcess();
         return packet;
     }
 
@@ -141,5 +150,12 @@ public class RemoteSensor {
      */
     public long getCurrentPacketsInQueue() {
         return queue.getCurrentPacketsInQueue();
+    }
+
+    /**
+     * Return true if the connection is still active
+     */
+    public boolean isActive() {
+        return isActive;
     }
 }

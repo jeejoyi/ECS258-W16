@@ -1,8 +1,5 @@
 import java.awt.*;
 import java.awt.event.*;
-/**
- * Created by CowCow on 3/8/16.
- */
 
 public class AnalysisGUI extends Frame implements Runnable {
     private static AnalysisGUI INSTANCE;

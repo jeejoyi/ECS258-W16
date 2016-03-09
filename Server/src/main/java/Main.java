@@ -25,12 +25,16 @@ public class Main {
         //sleep for 1000
         try {
             Thread.sleep(1000);
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
         //now start GUI
         (new Thread(AnalysisGUI.getInstance())).start();
+
+
+        //smart processor
+        (new SmartProcessor()).start();
 //
 
 

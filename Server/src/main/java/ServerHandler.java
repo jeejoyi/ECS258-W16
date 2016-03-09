@@ -5,16 +5,12 @@ import io.netty.channel.*;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Created by fre on 2/16/16.
- */
-
 @ChannelHandler.Sharable
 public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     private static final JsonParser parser = new JsonParser();
     private static final Gson GSON = new Gson();
-    
+
     /**
      * Handler of a new connection
      *

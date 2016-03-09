@@ -9,9 +9,6 @@ import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
 import org.jfree.ui.RefineryUtilities;
 
-/**
- * Created by CowCow on 3/8/16.
- */
 public class ServerInit implements Runnable {
     static final int PORT = 5005;
 
@@ -19,7 +16,7 @@ public class ServerInit implements Runnable {
 
     }
 
-    public void run()   {
+    public void run() {
         System.out.println("Server Started");
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
@@ -32,7 +29,7 @@ public class ServerInit implements Runnable {
                     .childHandler(new ChannelInitializerImpl());
             try {
                 b.bind(PORT).sync().channel().closeFuture().sync();
-            }catch (Exception e){
+            } catch (Exception e) {
 
             }
 

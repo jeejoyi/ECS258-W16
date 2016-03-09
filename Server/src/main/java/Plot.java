@@ -5,9 +5,7 @@ import java.util.Random;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/**
- * Created by CowCow on 3/8/16.
- */
+
 public class Plot {
     private JFrame frames;
     private RealTimeLinePlot charts;

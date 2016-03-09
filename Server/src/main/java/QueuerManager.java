@@ -1,7 +1,12 @@
 
+import javafx.util.Pair;
+
 import javax.swing.*;
+import javax.swing.Timer;
+import javax.xml.crypto.Data;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.*;
 
 public class QueuerManager {
 
@@ -11,6 +16,9 @@ public class QueuerManager {
     public static Integer PRIORITIES = 10; // per cent
 
     private volatile boolean activateIncreasingNeededPriority = false;
+
+    private long lastTimeAdded = 0;
+    private final PriorityQueue<Pair<Long, RemoteSensor>> sensorHeap = new PriorityQueue<>();
 
     /**
      * Singleton
@@ -44,6 +52,18 @@ public class QueuerManager {
         timer.start();
     }
 
+    // ####################### MANAGING CLIENTS #######################
+
+
+    public void addClient(RemoteSensor remoteSensor) {
+        sensorHeap.add(new Pair<Long, RemoteSensor>(getExecutionTime(remoteSensor.getNextPacket()), remoteSensor));
+    }
+
+    public void removeClient(RemoteSensor remoteSensor) {
+    }
+
+    // ####################### MANAGING FREEING MEMORY IN CASE IN WHICH IT'S NEEDED #############
+
     /**
      * Decides who has to free data for the incoming process
      *
@@ -54,7 +74,7 @@ public class QueuerManager {
 
         long objectSize = dataToProcess.getMemorySize();
         while (objectSize > 0) {
-            RemoteSensor highestMemorySensor = remoteSensorManager.getRemoteSensorsTopMemoryUsage();
+            RemoteSensor highestMemorySensor = remoteSensorManager.getRemoteSensorUsingMostMemory();
             if (highestMemorySensor.equals(dataToProcess)) {
                 return;
             }
@@ -81,6 +101,14 @@ public class QueuerManager {
         for (RemoteSensor remoteSensor : remoteSensorManager.getRemoteSensorsList()) {
             remoteSensor.decreaseWorkingPriority();
         }
+    }
+
+    // ################### MANAGING PUSH AND POP #######################
+
+    private long getExecutionTime(DataToProcess packet) {
+        long executionTime = packet == null ? lastTimeAdded : packet.timestamp.getTime();
+        lastTimeAdded = Math.min(executionTime, lastTimeAdded);
+        return lastTimeAdded;
     }
 
     /**
@@ -117,5 +145,20 @@ public class QueuerManager {
         RemoteSensorManager.getInstance().getRemoteSensor(fromChannel).push(packet);
     }
 
+
+    public DataToProcess popPacket() {
+        if (sensorHeap.isEmpty()) return null;
+        Pair<Long, RemoteSensor> next = sensorHeap.poll();
+        RemoteSensor remoteSensor = next.getValue();
+        DataToProcess packet = remoteSensor.pop();
+
+        // if there is no more data, but it is still active, I will reinsert it in the queue
+        if (packet != null || remoteSensor.isActive()) {
+            long time = getExecutionTime(packet);
+            sensorHeap.add(new Pair<>(lastTimeAdded, remoteSensor));
+        }
+
+        return packet;
+    }
 
 }

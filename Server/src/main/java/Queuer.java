@@ -1,9 +1,7 @@
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-/**
- * Created by fre on 2/23/16.
- */
+
 public class Queuer {
 
     public static final int THRESHOLD_ACTIVATE = 80; // per cent
@@ -145,6 +143,21 @@ public class Queuer {
         ConcurrentLinkedDeque<DataToProcess> q = queues.get(eldest.priority);
         DataToProcess packet = q.removeLast();
         decreaseStats(packet);
+        return packet;
+    }
+
+    /**
+     * Returns the next packet to execute, but it doesn't pop it
+     *
+     * @return
+     */
+    public DataToProcess getNextToProcess() {
+        DataToProcess eldest = getEldestInLine();
+        if (eldest == null) {
+            return null;
+        }
+        ConcurrentLinkedDeque<DataToProcess> q = queues.get(eldest.priority);
+        DataToProcess packet = q.getLast();
         return packet;
     }
 
