@@ -42,6 +42,7 @@ public class RemoteSensorManager {
 
         RemoteSensor sensor = new RemoteSensor(channel);
         sensorHeap.add(sensor);
+        sensorsList.add(channel.name());
         remoteToSensor.put(channel.name(), sensor);
     }
 

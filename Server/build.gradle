@@ -21,6 +21,7 @@ dependencies {
 }
 
 task(run, dependsOn: jar, type: JavaExec) {
+//    org.gradle.jvmargs ="-javaagent:lib/jamm-0.2.5.jar"
     main = 'Main'
     classpath = sourceSets.main.runtimeClasspath
 }
