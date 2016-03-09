@@ -14,8 +14,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     private static final JsonParser parser = new JsonParser();
     private static final Gson GSON = new Gson();
-
-
+    
     /**
      * Handler of a new connection
      *
@@ -40,8 +39,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     public void channelRead0(ChannelHandlerContext ctx, String request) throws Exception {
         final JsonObject json = (JsonObject) parser.parse(request);
         final DataToProcess obj = GSON.fromJson(json, DataToProcess.class);
-        QueuerManager.getInstance().pushPacket(ctx.channel().id().asLongText(), obj);
-        System.out.println("Data Received " + ctx.channel().id().asLongText());
+        QueuerManager.getInstance().pushPacket(ctx.channel().id().asShortText(), obj);
+        System.out.println("Data Received " + ctx.channel().id().asShortText());
     }
 
 

@@ -10,7 +10,7 @@ public class QueuerManager {
     public static Integer THRESHOLD_DEACTIVATE = 60; // per cent
     public static Integer PRIORITIES = 10; // per cent
 
-    private boolean activateIncreasingNeededPriority = false;
+    private volatile boolean activateIncreasingNeededPriority = false;
 
     /**
      * Singleton
@@ -35,7 +35,7 @@ public class QueuerManager {
                 else {
                     // if activateIncreasingNeededPriority== true, and it is below threshold
                     // deactivate the increasing priority policy
-                    if (MemoryInfo.freePercentage() < THRESHOLD_DEACTIVATE) {
+                    if (MemoryInfo.usedPercentage() < THRESHOLD_DEACTIVATE) {
                         activateIncreasingNeededPriority = false;
                     }
                 }
@@ -102,13 +102,15 @@ public class QueuerManager {
         //2.1) take action and send to the sensor the to backoff
         //3) insert new packet
 
-        if (MemoryInfo.freePercentage() > THRESHOLD_FORCE_FREE) {
+        if (MemoryInfo.usedPercentage() > THRESHOLD_FORCE_FREE) {
             freeFor(packet);
             // heavily decrease the traffic
+            System.out.println("FORCING decreasing traffic, and freeing memory for the new packet");
             softenIncomingTraffic(2);
         }
 
-        if (!activateIncreasingNeededPriority && MemoryInfo.freePercentage() > THRESHOLD_ACTIVATE) {
+        if (!activateIncreasingNeededPriority && MemoryInfo.usedPercentage() > THRESHOLD_ACTIVATE) {
+            System.out.println("SUGGESTING decreasing traffic");
             softenIncomingTraffic();
         }
 
