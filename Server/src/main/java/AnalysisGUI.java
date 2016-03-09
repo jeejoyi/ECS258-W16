@@ -42,6 +42,9 @@ public class AnalysisGUI extends Frame implements Runnable {
     public void drawLayout()   {
         //remove everything from the frame
         removeAll();
+        //add a title for window
+
+
         //delete object
         plotAllButton = null;
 
