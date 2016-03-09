@@ -13,6 +13,8 @@ public class Queuer {
     private int packetsForPriority[] = new int[10];
     private long currentPacketsInQueue = 0;
 
+    private static long totalMemoryAllotted = 0;
+
     private long memoryUsage = 0;
 
     enum PUSH_RESPONSE {
@@ -137,8 +139,11 @@ public class Queuer {
 
     // ################### STATS ###################
     public void increaseStats(DataToProcess packet) {
+        long size = ObjectSizeFetcher.getObjectSize(packet.data);
+
         // Add memory usage
         memoryUsage += ObjectSizeFetcher.getObjectSize(packet.data);
+        totalMemoryAllotted += size;
 
         // Increase the number of packets in the queue
         ++packetsForPriority[packet.priority];
@@ -147,8 +152,11 @@ public class Queuer {
     }
 
     public void decreaseStats(DataToProcess packet) {
+        long size = ObjectSizeFetcher.getObjectSize(packet.data);
+
         // Decrease memory usage
-        memoryUsage -= ObjectSizeFetcher.getObjectSize(packet.data);
+        memoryUsage -= size;
+        totalMemoryAllotted -= size;
 
         // Decrease the number of packets in the queue
         --packetsForPriority[packet.priority];
