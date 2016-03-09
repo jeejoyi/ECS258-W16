@@ -129,7 +129,7 @@ public class RemoteSensor {
      * Order to the client to update the priority
      */
     private void sendSetPriority() {
-        channel.writeAndFlush("{type:'set_priority', priority:'" + priority + "'}\n");
+        channel.flush().writeAndFlush("{\"type\":\"set_priority\", \"priority\":"+ priority +"}\n");
     }
 
     /**
