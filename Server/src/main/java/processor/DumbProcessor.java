@@ -2,24 +2,24 @@ package processor;
 
 import data_type.DataToProcess;
 
-public class StupidProcessor implements IProcessor {
+public class DumbProcessor implements IProcessor {
 
-    private static StupidProcessor INSTANCE;
+    private static DumbProcessor INSTANCE;
 
     /**
      * Get instance of Singleton
      *
      * @return instance
      */
-    public static StupidProcessor getInstance() {
+    public static DumbProcessor getInstance() {
         if (INSTANCE != null) return INSTANCE;
-        return INSTANCE = new StupidProcessor();
+        return INSTANCE = new DumbProcessor();
     }
 
     /**
      * Avoid new
      */
-    private StupidProcessor() {
+    private DumbProcessor() {
 
     }
 

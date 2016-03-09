@@ -30,7 +30,7 @@ public class SmartProcessorDispatcher extends Thread {
     private void processingFunction(DataToProcess packet) {
         switch (mode) {
             case STUPID:
-                StupidProcessor.getInstance().process(packet);
+                DumbProcessor.getInstance().process(packet);
                 break;
             // in the future there will be other cases, and maybe dynamic loading of the policies
             // probably throught a pattern observer
