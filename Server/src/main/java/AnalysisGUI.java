@@ -1,13 +1,22 @@
-import java.awt.*;
+import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import java.awt.event.*;
+import javax.swing.JScrollPane;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 /**
  * Created by CowCow on 3/8/16.
  */
 
-public class AnalysisGUI extends Frame implements Runnable {
+public class AnalysisGUI extends JFrame implements Runnable {
     private static AnalysisGUI INSTANCE;
-    private static Button plotAllButton;
-    private static Checkbox[] sensorCheckBox ;
+    private static JPanel checkBoxPanel;
+    private static JScrollPane checkboxScrollPanel;
+    private static JButton plotAllButton;
+    private static JCheckBox[] sensorCheckBox ;
     private static Plot[] plots;
 
     private static Plot totalMemoryUsage;
@@ -21,13 +30,16 @@ public class AnalysisGUI extends Frame implements Runnable {
     }
 
     public AnalysisGUI()    {
-        drawLayout();
+
 
         //window setting
-        setSize(200, 600);
+        setSize(200, 800);
         setTitle("Statistical Analysis");
-        setLayout(new FlowLayout());
+        setLayout(new BorderLayout());
         setResizable(false);
+
+        drawLayout();
+
         setVisible(true);
 
         totalMemoryUsage = new Plot("Total Memory", "Over All System Usage", "Time", "Memory Usage", maxMemory,
@@ -41,46 +53,46 @@ public class AnalysisGUI extends Frame implements Runnable {
 
     public void drawLayout()   {
         //remove everything from the frame
-        removeAll();
+        getContentPane().removeAll();
         //add a title for window
+        add(new JLabel("Select Devices to Plot"), BorderLayout.NORTH);
 
-
-        //delete object
-        plotAllButton = null;
-
-        //delete and adding all checkbox per client
-        sensorCheckBox = null;
-        sensorCheckBox = new Checkbox[RemoteSensorManager.getInstance().getRemoteSensorsNamesList().size()];
+        //add checkbox panel
+        checkBoxPanel = new JPanel();
+        checkBoxPanel.setLayout(new GridLayout(0, 2));
+        //add sensor checkbox into checkbox panel
         int i = 0;
         for(String s: RemoteSensorManager.getInstance().getRemoteSensorsNamesList())    {
             //first delete checkbox
-            sensorCheckBox[i] = new Checkbox(s);
-            add(sensorCheckBox[i]);
+            JCheckBox sensorCheckbox = new JCheckBox("Sensor "+ (i + 1));
+            checkBoxPanel.add(sensorCheckbox);
+            checkBoxPanel.revalidate();
+            checkBoxPanel.repaint();
             i++;
         }
+        checkboxScrollPanel = new JScrollPane(checkBoxPanel);
+        add(checkboxScrollPanel, BorderLayout.CENTER);
 
-        //plot button
-        plotAllButton = new Button("Plot All");
 
-        //button position
-        plotAllButton.setBounds(150,550,50,50);
-        //now add the button to the frame
-        add(plotAllButton);
+        //add a plot all button
+        plotAllButton = new JButton("Plot All");
+        add(plotAllButton, BorderLayout.SOUTH);
 
-        //listener for button
+//        //listener for button
         plotAllButton.addActionListener(new ActionListener()    {
             public void actionPerformed(ActionEvent e)  {
-                System.out.println("clicked");
-                //if theres no checkbox created
-                if(sensorCheckBox == null)  {
-                    return;
-                }
-                //check to see which checkbox is checked
-                for(Checkbox cb: sensorCheckBox)    {
-                    if(cb.getState() == true)  {
-                        //plot?? ya
-                    }
-                }
+            System.out.println("clicked");
+            //if theres no checkbox created
+            if(sensorCheckBox == null)  {
+                return;
+            }
+            //check to see which checkbox is checked
+            for(String s: RemoteSensorManager.getInstance().getRemoteSensorsNamesList())    {
+                //get the sensor instance
+                RemoteSensor sensor = RemoteSensorManager.getInstance().getRemoteSensor(s);
+
+
+            }
             }
         });
 
@@ -94,6 +106,7 @@ public class AnalysisGUI extends Frame implements Runnable {
 
         //must call for after redraw
         revalidate();
+        repaint();
     }
 
 }

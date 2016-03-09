@@ -18,6 +18,7 @@ dependencies {
     compile 'com.google.guava:guava:19.0'
     compile 'com.google.code.gson:gson:2.4'
     compile 'jfree:jfreechart:1.0.13'
+    compile 'com.intellij:forms_rt:6.0.5'
 }
 
 task(run, dependsOn: jar, type: JavaExec) {
