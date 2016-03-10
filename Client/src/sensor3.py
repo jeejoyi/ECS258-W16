@@ -68,8 +68,8 @@ class Sensor1(Master_Client):
 
 if __name__ == '__main__':
     if len(sys.argv) != 4:
-        print("Usage: python sensor1.py <address> <uniform time range> <lambda>\n")
-        print("Eg:\npython ./sensor1.py localhost 2 0.00001")
+        print("Usage: python sensor3.py <address> <uniform time range> <lambda>\n")
+        print("Eg:\npython ./sensor3.py localhost 2 0.00001")
         sys.exit(-1)
 
     ip_address = sys.argv[1]

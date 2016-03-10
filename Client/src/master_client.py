@@ -94,7 +94,7 @@ class Master_Client(object):
         return None
 
     def set_priority(self, new_threshold):
-        print("Priority changed from " + str(self.priority) + " -> " + str(new_threshold))
+        print("Priority changed from " + str(self.server_acceptable_priority) + " -> " + str(new_threshold))
         self.server_acceptable_priority = new_threshold
         # def set_threshold(self, new_threshold):
         # 	self.threshold = new_threshold
