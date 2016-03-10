@@ -85,7 +85,7 @@ class Master_Client(object):
             try:
                 decoded_data = json.loads(received_message)
                 # sys.exit(0)
-                if decoded_data["type"] == "set_priority":
+                if decoded_data["operation"] == "set_priority":
                     if "priority" in decoded_data.keys():
                         self.set_priority(decoded_data["priority"])
 
