@@ -24,11 +24,12 @@ class Master_Client(object):
         self.buffer_size = buffer_size
 
         # server configuration variable
-        self.server_acceptable_priority = 9
+        self.server_acceptable_priority = 0
         self.connected = False
 
         self.sock = None
         self.server_address = (self.destination, self.port)
+        self.incoming_messages = []
         # connect to the server
         self.connect()
 
@@ -52,13 +53,13 @@ class Master_Client(object):
         if self.connected:
             try:
                 # if the packet priority is within server accept priority range
-                if packet_priority <= self.server_acceptable_priority:
+                if packet_priority >= self.server_acceptable_priority:
                     # Send data
                     encoded_data = json.dumps({"operation": operation, "priority": packet_priority,
                                                "data": data
                                                }) + "\n"
                     self.sock.sendall(encoded_data)
-                    print ("Sending data")
+                    print ("Sending data at priority:"+str(packet_priority))
             except socket.error, e:
                 return
 
@@ -66,31 +67,40 @@ class Master_Client(object):
 
     def receive_data(self):
         # receive a package
+        response = None
+        if len(self.incoming_messages)>0:
+            response=self.process_received_message()
         try:
             message = self.sock.recv(1024)
-            return self.process_received_message(message)
+            self.incoming_messages =  self.incoming_messages + message.split("\n")
+            return response
         except socket.error, e:
             err = e.args[0]
             if err == errno.EAGAIN or err == errno.EWOULDBLOCK:
                 sleep(0.001)
-                return None
+        return response
 
     #should contain a callback
-    def process_received_message(self, received_messages):
-        # decode the received message
-        for received_message in received_messages.split("\n"):
-            try:
-                decoded_data = json.loads(received_message)
-                # if the packet received
-                if decoded_data["operation"] == "set_priority":
-                    if "priority" in decoded_data.keys():
-                        self.set_priority(decoded_data["priority"])
+    def process_received_message(self):
+        received_message = self.incoming_messages.pop(0)
 
-                return decoded_data
-            except ValueError:
-                print ("####### ERR ########")
-                print ("Undecoded message " + received_message)
-                print ("###############")
+        while len(received_message)==0 and len(self.incoming_messages)>0:
+            received_message = self.incoming_messages.pop(0)
+        # decode the received message
+        if len(received_message)==0:
+            return None
+        try:
+            decoded_data = json.loads(received_message)
+            # if the packet received
+            if decoded_data["operation"] == "set_priority":
+                if "priority" in decoded_data.keys():
+                    self.set_priority(decoded_data["priority"])
+
+            return decoded_data
+        except ValueError:
+            print ("####### ERR ########")
+            print ("Undecoded message of len " +str(len(received_message)) +" "+ received_message)
+            print ("###############")
         return None
 
     def set_priority(self, new_threshold):

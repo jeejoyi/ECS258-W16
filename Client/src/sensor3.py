@@ -56,7 +56,7 @@ class Sensor1(Master_Client):
             # if within the setting range
             if self.apply_policy(sample_data):
                 # random priotiry
-                random_priority = 9 - int(math.ceil(math.log(random.random()%1024, 2)))%10
+                random_priority = 10 - int(math.ceil(math.log(random.random()*1024, 2)))
                 self.send_data("data", random_priority, self.generate_random_data())
                 self.random_pause_time()
 
@@ -70,6 +70,7 @@ if __name__ == '__main__':
     if len(sys.argv) != 4:
         print("Usage: python sensor3.py <address> <uniform time range> <lambda>\n")
         print("Eg:\npython ./sensor3.py localhost 2 0.00001")
+        # python ./sensor3.py localhost 1 0.000025
         sys.exit(-1)
 
     ip_address = sys.argv[1]
