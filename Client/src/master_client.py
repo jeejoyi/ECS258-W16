@@ -7,6 +7,7 @@ import socket
 import json
 import select
 import errno
+import random
 from time import sleep
 
 # 3rd party libraries
@@ -16,13 +17,14 @@ import macro
 
 
 class Master_Client(object):
-    def __init__(self, destination, port=5005, buffer_size=1024, priority=macro.PRIORITY_LOW):
+    def __init__(self, destination, port=5005, buffer_size=1024):
         # master class variable
         self.destination = destination
         self.port = port
         self.buffer_size = buffer_size
-        self.priority = priority
-        self.priority_threshold = 10
+
+        # server configuration variable
+        self.server_acceptable_priority = 9
         self.connected = False
 
         self.sock = None
@@ -46,14 +48,13 @@ class Master_Client(object):
         print ("Disconnected")
         self.connected = False
 
-    def send_data(self, data):
+    def send_data(self, operation, packet_priority, data):
         if self.connected:
             try:
-
-                # if the sensor priority is within server accept priority range
-                if self.priority <= self.priority_threshold:
+                # if the packet priority is within server accept priority range
+                if packet_priority <= self.server_acceptable_priority:
                     # Send data
-                    encoded_data = json.dumps({"operation": "r", "priority": self.priority,
+                    encoded_data = json.dumps({"operation": operation, "priority": packet_priority,
                                                "data": data
                                                }) + "\n"
                     self.sock.sendall(encoded_data)
@@ -72,11 +73,7 @@ class Master_Client(object):
             err = e.args[0]
             if err == errno.EAGAIN or err == errno.EWOULDBLOCK:
                 sleep(0.001)
-                # print 'No data available'
                 return None
-                # else:
-                # 	print e
-                # 	sys.exit(1)
 
     #should contain a callback
     def process_received_message(self, received_messages):
@@ -84,7 +81,7 @@ class Master_Client(object):
         for received_message in received_messages.split("\n"):
             try:
                 decoded_data = json.loads(received_message)
-                # sys.exit(0)
+                # if the packet received
                 if decoded_data["operation"] == "set_priority":
                     if "priority" in decoded_data.keys():
                         self.set_priority(decoded_data["priority"])
@@ -96,8 +93,14 @@ class Master_Client(object):
                 print ("###############")
         return None
 
-    def set_priority(self, new_proiority):
-        print("Priority changed from " + str(self.priority) + " -> " + str(new_proiority))
-        self.priority = new_proiority
+    def set_priority(self, new_threshold):
+        print("Priority changed from " + str(self.priority) + " -> " + str(new_threshold))
+        self.server_acceptable_priority = new_threshold
         # def set_threshold(self, new_threshold):
         # 	self.threshold = new_threshold
+
+
+    def random_hello_packet(self):
+        random_chance = random.uniform(0,99999)
+        if(random_chance < 10):
+            self.send_data("hello", 9, "")
