@@ -29,6 +29,7 @@ public class Plot {
                                         seriesTitles);
         //add the chart to the frame
         frame.add(charts);
+        frame.add(charts);
         frame.pack();
 
         //display frame
