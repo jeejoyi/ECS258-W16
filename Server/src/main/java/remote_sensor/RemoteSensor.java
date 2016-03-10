@@ -170,6 +170,15 @@ public class RemoteSensor {
         return queue.getCurrentPacketsInQueue();
     }
 
+
+    /**
+     * Get the total of packets dropped for the current client
+     */
+    public long getPacketsDropped() {
+        return queue.getPacketsDropped();
+    }
+
+
     /**
      * Return true if the connection is still active
      */
