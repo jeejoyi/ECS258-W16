@@ -22,7 +22,7 @@ public class QueuerManager {
     private final PriorityQueue<Pair<Long, RemoteSensor>> sensorHeap = new PriorityQueue<>(new Comparator<Pair<Long, RemoteSensor>>() {
         @Override
         public int compare(Pair<Long, RemoteSensor> o1, Pair<Long, RemoteSensor> o2) {
-            return (int) (o2.getKey() - o1.getKey());
+            return (int) -(o2.getKey() - o1.getKey());
         }
 
     });
@@ -143,7 +143,7 @@ public class QueuerManager {
      */
     private long getExecutionTime(DataToProcess packet) {
         long executionTime = packet == null ? lastTimeAdded : packet.timestamp.getTime();
-        lastTimeAdded = Math.min(executionTime, lastTimeAdded);
+        lastTimeAdded = Math.max(executionTime, lastTimeAdded);
         return lastTimeAdded;
     }
 
@@ -198,6 +198,8 @@ public class QueuerManager {
             //declare that the sensor is dead, and remove from memory
             RemoteSensorManager.getInstance().removeSensorChannel(remoteSensor);
         }
+        if(packet!=null)
+            System.out.println("Packet Time: " +packet.timestamp.getTime());
 
         return packet;
     }
