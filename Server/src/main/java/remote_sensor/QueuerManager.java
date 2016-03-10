@@ -11,9 +11,9 @@ import java.util.*;
 
 public class QueuerManager {
 
-    public static Integer THRESHOLD_ACTIVATE = 70; // per cent
+    public static Integer THRESHOLD_ACTIVATE = 50; // per cent
     public static Integer THRESHOLD_FORCE_FREE = 80; // per cent
-    public static Integer THRESHOLD_DEACTIVATE = 60; // per cent
+    public static Integer THRESHOLD_DEACTIVATE = 40; // per cent
     public static Integer PRIORITIES = 10; // per cent
 
     private volatile boolean activateIncreasingNeededPriority = false;
