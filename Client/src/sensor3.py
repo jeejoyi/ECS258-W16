@@ -1,17 +1,15 @@
 #!/usr/bin/env python
 
 # standard libraries
-import os
-import sys
-import random
-import time
-import string
 import math
+import random
+import string
+import sys
+import time
 
 # 3rd party libraries
 
 # local libraries
-import macro
 from master_client import Master_Client
 
 
@@ -34,12 +32,14 @@ class Sensor1(Master_Client):
         # print(random_length, message)
         return message
 
-    def sensor_operation(self):
+    @staticmethod
+    def sensor_operation():
         return random.uniform(0, 99999)
 
-    def apply_policy(self, sample_data):
+    @staticmethod
+    def apply_policy(sample_data):
         # if within range
-        if(0 < sample_data < 200):
+        if 0 < sample_data < 200:
             return True
 
         return False
@@ -49,13 +49,13 @@ class Sensor1(Master_Client):
         pass
 
     def run(self):
-        while(True):
+        while True:
             # try:
                 # sample detection
             sample_data = self.sensor_operation()
             # if within the setting range
             if self.apply_policy(sample_data):
-                # random priotiry
+                # random priority
                 random_priority = 10 - int(math.ceil(math.log(random.random()*1024, 2)))
                 self.send_data("data", random_priority, self.generate_random_data())
                 self.random_pause_time()
@@ -69,7 +69,7 @@ class Sensor1(Master_Client):
 if __name__ == '__main__':
     if len(sys.argv) != 4:
         print("Usage: python sensor3.py <address> <uniform time range> <lambda>\n")
-        print("Eg:\npython ./sensor3.py localhost 2 0.00001")
+        print("Eg:\n python ./sensor3.py localhost 1 0.000025")
         # python ./sensor3.py localhost 1 0.000025
         sys.exit(-1)
 

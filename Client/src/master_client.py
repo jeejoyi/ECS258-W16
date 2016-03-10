@@ -59,8 +59,8 @@ class Master_Client(object):
                                                "data": data
                                                }) + "\n"
                     self.sock.sendall(encoded_data)
-                    print ("Sending data at priority:"+str(packet_priority))
-            except socket.error, e:
+                    print ('Sending data at priority:' + str(packet_priority))
+            except socket.error:
                 return
 
                 # http://stackoverflow.com/questions/16745409/what-does-pythons-socket-recv-return-for-non-blocking-sockets-if-no-data-is-r
@@ -68,11 +68,11 @@ class Master_Client(object):
     def receive_data(self):
         # receive a package
         response = None
-        if len(self.incoming_messages)>0:
-            response=self.process_received_message()
+        if len(self.incoming_messages) > 0:
+            response = self.process_received_message()
         try:
             message = self.sock.recv(1024)
-            self.incoming_messages =  self.incoming_messages + message.split("\n")
+            self.incoming_messages = self.incoming_messages + message.split("\n")
             return response
         except socket.error, e:
             err = e.args[0]
@@ -80,14 +80,14 @@ class Master_Client(object):
                 sleep(0.001)
         return response
 
-    #should contain a callback
+    # should contain a callback
     def process_received_message(self):
         received_message = self.incoming_messages.pop(0)
 
-        while len(received_message)==0 and len(self.incoming_messages)>0:
+        while len(received_message) == 0 and len(self.incoming_messages) > 0:
             received_message = self.incoming_messages.pop(0)
         # decode the received message
-        if len(received_message)==0:
+        if len(received_message) == 0:
             return None
         try:
             decoded_data = json.loads(received_message)
@@ -99,7 +99,7 @@ class Master_Client(object):
             return decoded_data
         except ValueError:
             print ("####### ERR ########")
-            print ("Undecoded message of len " +str(len(received_message)) +" "+ received_message)
+            print ("Undecoded message of len " + str(len(received_message)) + " " + received_message)
             print ("###############")
         return None
 
@@ -109,8 +109,7 @@ class Master_Client(object):
         # def set_threshold(self, new_threshold):
         # 	self.threshold = new_threshold
 
-
     def random_hello_packet(self):
-        random_chance = random.uniform(0,99999)
-        if(random_chance < 10):
+        random_chance = random.uniform(0, 99999)
+        if (random_chance < 10):
             self.send_data("hello", 9, "")
