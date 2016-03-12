@@ -17,6 +17,7 @@
 .gradle/
 .idea/
 *.pyc
+.DS_Store
 
 build/
 *.class
