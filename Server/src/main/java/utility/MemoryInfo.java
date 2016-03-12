@@ -62,6 +62,24 @@ public class MemoryInfo {
     }
 
     /**
+     * Returns total number of Packet dropped from queue
+     *
+     * @return long
+     */
+    public static long getTotalPacketDropped()  {
+        return Queuer.getTotalPacketsDropped();
+    }
+
+    /**
+     * Returns total number of Packet currently in queue
+     *
+     * @return long
+     */
+    public static long getTotalPacketAlive()  {
+        return Queuer.getTotalPacketsInQueues();
+    }
+
+    /**
      * Gets the free memory in percentage
      */
     public static long freePercentage() {
