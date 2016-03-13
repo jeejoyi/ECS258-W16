@@ -1,5 +1,6 @@
 package graph;
 
+import remote_sensor.Queuer;
 import remote_sensor.RemoteSensor;
 import remote_sensor.RemoteSensorManager;
 import utility.MemoryInfo;
@@ -48,20 +49,22 @@ public class AnalysisGUI extends JFrame implements Runnable {
         String windowTitle = "Over All Server Usage";
         String[] plotTitles = {"Memory Usage (Byte)", "Memory Usage (%)", "Packets In System"};
         String[] XAxisTitles = {"Time", "Time", "Time"};
-        String[] YAxisTitles = {"Memory", "Precentage (%)", "Packets"};
-        String[][] seriesTitles = {{"Used Most Memory", "Total Memory"}, {"Free", "Used"}, {"Dropped", "Alive"}};
+        String[] YAxisTitles = {"Memory (Byte)", "Precentage (%)", "Packets"};
+        String[][] seriesTitles = {{"Used Most Memory", "Total Memory"},
+                                   {"Free", "Used"},
+                                   {"Dropped", "Alive"}};
         //construct the plot
         Plot serverUsage = new Plot(windowTitle, plotTitles, XAxisTitles, YAxisTitles, seriesTitles);
         //construct updat function for each plot
-        updateFunction test[][] = new updateFunction[3][2];
+        updateFunction seriesUpdateFunction[][] = new updateFunction[3][2];
         //Memory Usage (Byte)
-        test[0][0] = new updateFunction() {
+        seriesUpdateFunction[0][0] = new updateFunction() {
             @Override
             public float getData() {
                 return MemoryInfo.getMostMemoryUsed();
             }
         };
-        test[0][1] = new updateFunction() {
+        seriesUpdateFunction[0][1] = new updateFunction() {
             @Override
             public float getData() {
                 return MemoryInfo.getTotalMemoryUsed();
@@ -69,13 +72,13 @@ public class AnalysisGUI extends JFrame implements Runnable {
         };
 
         //Memory Usage (%)
-        test[1][0] = new updateFunction() {
+        seriesUpdateFunction[1][0] = new updateFunction() {
             @Override
             public float getData() {
                 return MemoryInfo.freePercentage();
             }
         };
-        test[1][1] = new updateFunction() {
+        seriesUpdateFunction[1][1] = new updateFunction() {
             @Override
             public float getData() {
                 return MemoryInfo.usedPercentage();
@@ -83,20 +86,22 @@ public class AnalysisGUI extends JFrame implements Runnable {
         };
 
         //Packets In System
-        test[2][0] = new updateFunction() {
+        seriesUpdateFunction[2][0] = new updateFunction() {
             @Override
             public float getData() {
                 return MemoryInfo.getTotalPacketDropped();
             }
         };
-        test[2][1] = new updateFunction() {
+        seriesUpdateFunction[2][1] = new updateFunction() {
             @Override
             public float getData() {
                 return MemoryInfo.getTotalPacketAlive();
             }
         };
+
+
         //initial timer
-        serverUsage.initialTimer(test);
+        serverUsage.initialTimer(seriesUpdateFunction);
 
     }
 
@@ -157,12 +162,30 @@ public class AnalysisGUI extends JFrame implements Runnable {
                     //plot it
                     if((sensorCheckBoxes.get(sensorName).isSelected()) && (sensorPlots.get(sensorName) == null))    {
                         //plot the Usage for the device
-//                        if(sensorPlots.get(s) == null)  {
-////                            String[] series = {"memory"};
-////                            System.out.println(s + " is checked");
-////                            sensorPlots.put(s, new Plot(s, "Usage", "Time", "Memory Usage (bytes)", maxMemory, series));
-////                            sensorPlots.get(s).initialTimer(sensor);
-//                        }
+                        String windowTitle = "Device: " + sensorName;
+                        String[] plotTitles = {"Memory Usage (Byte)", "Packets In System"};
+                        String[] XAxisTitles = {"Time", "Time"};
+                        String[] YAxisTitles = {"Memory (Byte)", "Packets"};
+                        String[][] seriesTitles = {{"Total Memory Used"},
+                                                   {"Dropped", "Alive", "Priority0", "Priority1", "Priority2",
+                                                    "Priority3", "Priority4", "Priority5", "Priority6", "Priority7",
+                                                    "Priority8", "Priority9"}};
+                        sensorPlots.put(sensorName, new Plot(windowTitle, plotTitles, XAxisTitles, YAxisTitles,
+                                                             seriesTitles));
+                        //construct series update function
+                        //construct updat function for each plot
+                        updateFunction seriesUpdateFunction[][] = new updateFunction[2][];
+                        seriesUpdateFunction[0] = new updateFunction[1];
+                        seriesUpdateFunction[1] = new updateFunction[11];
+                        //Memory Usage (Byte)
+                        seriesUpdateFunction[0][0] = new updateFunction() {
+                            @Override
+                            public float getData() {
+                                return sensor.getMemoryUsage();
+                            }
+                        };
+                        //initial timer
+//                        sensorPlots.get(sensorName).initialTimer(seriesUpdateFunction);
                     }
                 }
             }

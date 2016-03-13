@@ -25,7 +25,7 @@ public class Plot extends JFrame    {
         //set size
         setSize(this.window_width, this.window_height);
         //frame setting
-        setLayout(new GridLayout(0, 3));
+        setLayout(new GridLayout(0, this.totalPlotInFrame));
         //make the frame non-resizeable
         setResizable(false);
         setVisible(true);
