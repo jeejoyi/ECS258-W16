@@ -2,6 +2,7 @@ package graph;
 
 import remote_sensor.RemoteSensor;
 import remote_sensor.RemoteSensorManager;
+import utility.MemoryInfo;
 
 import javax.swing.*;
 import javax.swing.JButton;
@@ -23,9 +24,9 @@ public class AnalysisGUI extends JFrame implements Runnable {
     private static Map<String, JCheckBox> sensorCheckBoxes = new HashMap<>();
     private static Map<String, Plot> sensorPlots = new HashMap<>();
 
-    private static Plot totalMemoryUsage;
-    private static String[] totalMemoryPlotSeries = {"total memory usage", "max memory usage"};
-    private static float maxMemory = 999999;
+//    private static Plot totalMemoryUsage;
+//    private static String[] totalMemoryPlotSeries = {"total memory usage", "max memory usage"};
+//    private static float maxMemory = 999999;
 
     //singleton
     public static AnalysisGUI getInstance() {
@@ -39,14 +40,64 @@ public class AnalysisGUI extends JFrame implements Runnable {
         setTitle("Statistical Analysis");
         setLayout(new BorderLayout());
         setResizable(false);
-
         drawLayout();
-
         setVisible(true);
 
-        totalMemoryUsage = new Plot("Total Memory", "Over All System Usage", "Time", "Memory Usage (bytes)", maxMemory,
-                                    totalMemoryPlotSeries);
-        totalMemoryUsage.initialTimer(null);
+
+        //plot for server over all usage
+        String windowTitle = "Over All Server Usage";
+        String[] plotTitles = {"Memory Usage (Byte)", "Memory Usage (%)", "Packets In System"};
+        String[] XAxisTitles = {"Time", "Time", "Time"};
+        String[] YAxisTitles = {"Memory", "Precentage (%)", "Packets"};
+        String[][] seriesTitles = {{"Used Most Memory", "Total Memory"}, {"Free", "Used"}, {"Dropped", "Alive"}};
+        //construct the plot
+        Plot serverUsage = new Plot(windowTitle, plotTitles, XAxisTitles, YAxisTitles, seriesTitles);
+        //construct updat function for each plot
+        updateFunction test[][] = new updateFunction[3][2];
+        //Memory Usage (Byte)
+        test[0][0] = new updateFunction() {
+            @Override
+            public float getData() {
+                return MemoryInfo.getMostMemoryUsed();
+            }
+        };
+        test[0][1] = new updateFunction() {
+            @Override
+            public float getData() {
+                return MemoryInfo.getTotalMemoryUsed();
+            }
+        };
+
+        //Memory Usage (%)
+        test[1][0] = new updateFunction() {
+            @Override
+            public float getData() {
+                return MemoryInfo.freePercentage();
+            }
+        };
+        test[1][1] = new updateFunction() {
+            @Override
+            public float getData() {
+                return MemoryInfo.usedPercentage();
+            }
+        };
+
+        //Packets In System
+        test[2][0] = new updateFunction() {
+            @Override
+            public float getData() {
+                return MemoryInfo.getTotalPacketDropped();
+            }
+        };
+        test[2][1] = new updateFunction() {
+            @Override
+            public float getData() {
+                return MemoryInfo.getTotalPacketAlive();
+            }
+        };
+        //initial timer
+        serverUsage.initialTimer(test);
+
     }
 
     public void run()   {
@@ -99,17 +150,19 @@ public class AnalysisGUI extends JFrame implements Runnable {
                     return;
                 }
                 //check to see which checkbox is checked
-                for(String s: RemoteSensorManager.getInstance().getRemoteSensorsNamesList())    {
+                for(String sensorName: RemoteSensorManager.getInstance().getRemoteSensorsNamesList())    {
                     //get the sensor instance
-                    RemoteSensor sensor = RemoteSensorManager.getInstance().getRemoteSensor(s);
-                    if(sensorCheckBoxes.get(s).isSelected())    {
-                        //graph it
-                        if(sensorPlots.get(s) == null)  {
-                            String[] series = {"memory"};
-                            System.out.println(s + " is checked");
-                            sensorPlots.put(s, new Plot(s, "Usage", "Time", "Memory Usage (bytes)", maxMemory, series));
-                            sensorPlots.get(s).initialTimer(sensor);
-                        }
+                    RemoteSensor sensor = RemoteSensorManager.getInstance().getRemoteSensor(sensorName);
+                    //if the check box checked, and have not already opened the window
+                    //plot it
+                    if((sensorCheckBoxes.get(sensorName).isSelected()) && (sensorPlots.get(sensorName) == null))    {
+                        //plot the Usage for the device
+//                        if(sensorPlots.get(s) == null)  {
+////                            String[] series = {"memory"};
+////                            System.out.println(s + " is checked");
+////                            sensorPlots.put(s, new Plot(s, "Usage", "Time", "Memory Usage (bytes)", maxMemory, series));
+////                            sensorPlots.get(s).initialTimer(sensor);
+//                        }
                     }
                 }
             }

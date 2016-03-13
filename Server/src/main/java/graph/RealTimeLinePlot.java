@@ -26,10 +26,9 @@ public class RealTimeLinePlot extends JPanel {
     private final int numSeries;
 
     public RealTimeLinePlot(final String chartTitle, final String XAxisTitle, final String YAxisTitle,
-                            final Date current_Date, final float maxYRange, final int numSeries,
-                            final String[] seriesTitle) {
+                            final Date current_Date, final int numSeries, final String[] seriesTitle,
+                            int width, int height) {
         this.numSeries = numSeries;
-
 
         //init dataset as a dynamicTimeSeriesCollision class with nSeries = 1, nMoments = 1000, time sample = second
         dataset = new DynamicTimeSeriesCollection(numSeries, 1000, new Second());
@@ -52,9 +51,10 @@ public class RealTimeLinePlot extends JPanel {
         axis.setDateFormatOverride(new SimpleDateFormat("mm.ss"));
         //create chart panel
         final ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(600, 400));
+        chartPanel.setPreferredSize(new java.awt.Dimension(width, height));
+//        chartPanel.setPreferredSize(new java.awt.Dimension(400, 300));
         chartPanel.setMouseZoomable(true, true);
-        //dont know where it add it to
+//        dont know where it add it to
         add(chartPanel);
     }
 

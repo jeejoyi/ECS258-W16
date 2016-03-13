@@ -1,6 +1,8 @@
 package utility;
 
 import remote_sensor.Queuer;
+import remote_sensor.RemoteSensorManager;
+import remote_sensor.RemoteSensor;
 
 import java.text.NumberFormat;
 
@@ -80,6 +82,26 @@ public class MemoryInfo {
     }
 
     /**
+     * Returns total memory used by devices
+     *
+     * @return long
+     */
+
+    public static long getTotalMemoryUsed() {return Queuer.getTotalMemoryUsed();};
+
+    /**
+     * Returns most total memory used by devices
+     *
+     * @return long
+     */
+
+    public static long getMostMemoryUsed() {
+        RemoteSensor sensor = RemoteSensorManager.getInstance().getRemoteSensorUsingMostMemory();
+
+        return (sensor != null) ? sensor.getMemoryUsage() : 0;
+    }
+
+    /**
      * Gets the free memory in percentage
      */
     public static long freePercentage() {
@@ -93,4 +115,6 @@ public class MemoryInfo {
     public static long usedPercentage() {
         return 100 - freePercentage();
     }
+
+
 }
