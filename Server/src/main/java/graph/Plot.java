@@ -2,6 +2,8 @@ package graph;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Date;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,12 +13,12 @@ interface updateFunction    {
 }
 
 public class Plot extends JFrame    {
-//    private JFrame frame;
     private int window_width = 1200;
     private int window_height = 300;
     private RealTimeLinePlot[] charts;
-//    private JPanel[] plotsPanel;
     private int totalPlotInFrame = 0;
+
+    private boolean isWindowOpen = false;
 
     private void frameSetting(String windowTitles) {
         /*Frame configuration*/
@@ -29,6 +31,13 @@ public class Plot extends JFrame    {
         //make the frame non-resizeable
         setResizable(false);
         setVisible(true);
+
+        //listener for close
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                exit();
+            }
+        });
     }
 
     public Plot(final String windowTitles, final String[] plotTitles, final String[] XAxisTitles,
@@ -65,6 +74,9 @@ public class Plot extends JFrame    {
         //must call to ensure all changes
         revalidate();
         repaint();
+
+        //set window is open
+        this.isWindowOpen = true;
     }
 
     public Plot(final String windowTitles, final String plotTitles, final String XAxisTitles,
@@ -89,6 +101,8 @@ public class Plot extends JFrame    {
         //must call for after redraw
         revalidate();
         repaint();
+
+        this.isWindowOpen = true;
     }
 
     //initial timer for update after creating the graph
@@ -122,24 +136,13 @@ public class Plot extends JFrame    {
             charts[i].update(data);
         }
     }
-//    public void updateGraph(RemoteSensor sensor) {
-//        if (sensor == null) {
-//            sensor = RemoteSensorManager.getInstance().getRemoteSensorUsingMostMemory();
-//            float data[] = {MemoryInfo.getUsedMemory(),
-//                            sensor == null ? 0 : sensor.getMemoryUsage()};
-//            charts[0].update(data);
-//        } else {
-//            float data[] = {sensor.getMemoryUsage()};
-//            for(int i = 0; i < this.totalPlotInFrame; i++)  {
-//                charts[i].update(data);
-//            }
-//
-//        }
-//
-//
-//    }
+
+    public boolean isActive()   {
+        return this.isWindowOpen;
+    }
 
     public void exit()  {
+        this.isWindowOpen = false;
         setVisible(false);
         dispose();
     }

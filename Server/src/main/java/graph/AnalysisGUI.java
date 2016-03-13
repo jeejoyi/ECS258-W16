@@ -25,34 +25,48 @@ public class AnalysisGUI extends JFrame implements Runnable {
     private static Map<String, JCheckBox> sensorCheckBoxes = new HashMap<>();
     private static Map<String, Plot> sensorPlots = new HashMap<>();
 
-//    private static Plot totalMemoryUsage;
-//    private static String[] totalMemoryPlotSeries = {"total memory usage", "max memory usage"};
-//    private static float maxMemory = 999999;
-
     //singleton
     public static AnalysisGUI getInstance() {
         if (INSTANCE != null) return INSTANCE;
         return INSTANCE = new AnalysisGUI();
     }
 
-    //easy allocate for updateFunctions
-    private updateFunction[][] allocateUpdateFunction(String[] plots, String[][] series) {
-        updateFunction temp[][] = new updateFunction[plots.length][];
-        for (int i = 0; i < series.length; i++) {
-            temp[i] = new updateFunction[series[i].length];
-        }
-        return temp;
+    public void run()   {
+        System.out.println("GUI Started");
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for(String sensorName: RemoteSensorManager.getInstance().getRemoteSensorsNamesList())   {
+                    if((sensorPlots.get(sensorName)) != null && !(sensorPlots.get(sensorName).isActive())) {
+                        sensorPlots.remove(sensorName);
+                        sensorCheckBoxes.get(sensorName).setSelected(false);
+                    }
+                }
+            }
+        });
+        timer.start();
+    }
+
+    private void frameSetting(String windowTitle) {
+        //set the window size
+        setSize(200, 700);
+        //window title
+        setTitle(windowTitle);
+        //set layout format
+        setLayout(new BorderLayout());
+        //non resizeable
+        setResizable(false);
+        //draw the component inside
+        drawLayout();
+        //when the window close, system close
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        //viewable to user
+        setVisible(true);
     }
 
     public AnalysisGUI()    {
         //window setting
-        setSize(200, 700);
-        setTitle("Statistical Analysis");
-        setLayout(new BorderLayout());
-        setResizable(false);
-        drawLayout();
-        setVisible(true);
-
+        frameSetting("Statistical Analysis");
 
         //plot for server over all usage
         String windowTitle = "Over All Server Usage";
@@ -114,10 +128,6 @@ public class AnalysisGUI extends JFrame implements Runnable {
 
     }
 
-    public void run()   {
-        System.out.println("GUI Started");
-    }
-
     public void drawLayout()   {
         //remove everything from the frame
         getContentPane().removeAll();
@@ -135,13 +145,13 @@ public class AnalysisGUI extends JFrame implements Runnable {
 
         //add sensor checkbox into checkbox panel
         int i = 0;
-        for(String s: RemoteSensorManager.getInstance().getRemoteSensorsNamesList())    {
+        for(String sensorName: RemoteSensorManager.getInstance().getRemoteSensorsNamesList())    {
             //create a new checkbox object and put it into the map by device name
-            if(sensorCheckBoxes.get(s) == null){
-                sensorCheckBoxes.put(s, new JCheckBox("Sensor "+ (i + 1)));
+            if(sensorCheckBoxes.get(sensorName) == null){
+                sensorCheckBoxes.put(sensorName, new JCheckBox(sensorName));
             }
             //add the checkbox to the panel
-            checkBoxPanel.add(sensorCheckBoxes.get(s));
+            checkBoxPanel.add(sensorCheckBoxes.get(sensorName));
             //re configure the panel
             checkBoxPanel.revalidate();
             checkBoxPanel.repaint();
@@ -221,17 +231,18 @@ public class AnalysisGUI extends JFrame implements Runnable {
             }
         });
 
-        //listener for close
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent we) {
-                dispose();
-                System.exit(0);
-            }
-        });
-
         //must call for after redraw
         revalidate();
         repaint();
+    }
+
+    //easy allocate for updateFunctions
+    private updateFunction[][] allocateUpdateFunction(String[] plots, String[][] series) {
+        updateFunction temp[][] = new updateFunction[plots.length][];
+        for (int i = 0; i < series.length; i++) {
+            temp[i] = new updateFunction[series[i].length];
+        }
+        return temp;
     }
 
     //close the graph if it was display
