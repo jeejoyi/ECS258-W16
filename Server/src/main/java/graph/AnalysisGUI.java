@@ -35,6 +35,15 @@ public class AnalysisGUI extends JFrame implements Runnable {
         return INSTANCE = new AnalysisGUI();
     }
 
+    //easy allocate for updateFunctions
+    private updateFunction[][] allocateUpdateFunction(String[] plots, String[][] series) {
+        updateFunction temp[][] = new updateFunction[plots.length][];
+        for (int i = 0; i < series.length; i++) {
+            temp[i] = new updateFunction[series[i].length];
+        }
+        return temp;
+    }
+
     public AnalysisGUI()    {
         //window setting
         setSize(200, 700);
@@ -56,7 +65,7 @@ public class AnalysisGUI extends JFrame implements Runnable {
         //construct the plot
         Plot serverUsage = new Plot(windowTitle, plotTitles, XAxisTitles, YAxisTitles, seriesTitles);
         //construct updat function for each plot
-        updateFunction seriesUpdateFunction[][] = new updateFunction[3][2];
+        updateFunction seriesUpdateFunction[][] = allocateUpdateFunction(plotTitles, seriesTitles); //new updateFunction[plotTitles.length][seriesTitles];
         //Memory Usage (Byte)
         seriesUpdateFunction[0][0] = new updateFunction() {
             @Override
@@ -174,9 +183,8 @@ public class AnalysisGUI extends JFrame implements Runnable {
                                                              seriesTitles));
                         //construct series update function
                         //construct updat function for each plot
-                        updateFunction seriesUpdateFunction[][] = new updateFunction[2][];
-                        seriesUpdateFunction[0] = new updateFunction[1];
-                        seriesUpdateFunction[1] = new updateFunction[11];
+                        updateFunction seriesUpdateFunction[][] = allocateUpdateFunction(plotTitles, seriesTitles);
+
                         //Memory Usage (Byte)
                         seriesUpdateFunction[0][0] = new updateFunction() {
                             @Override
@@ -184,8 +192,30 @@ public class AnalysisGUI extends JFrame implements Runnable {
                                 return sensor.getMemoryUsage();
                             }
                         };
+                        //packet in system
+                        seriesUpdateFunction[1][0] = new updateFunction() {
+                            @Override
+                            public float getData() {
+                                return sensor.getPacketsDropped();
+                            }
+                        };
+                        seriesUpdateFunction[1][1] = new updateFunction() {
+                            @Override
+                            public float getData() {
+                                return sensor.getCurrentPacketsInQueue();
+                            }
+                        };
+                        for(int i = 0; i < 10; i++) {
+                            final int index = i;
+                            seriesUpdateFunction[1][i + 2] = new updateFunction() {
+                                @Override
+                                public float getData() {
+                                    return sensor.getPacketsForPriority()[index];
+                                }
+                            };
+                        }
                         //initial timer
-//                        sensorPlots.get(sensorName).initialTimer(seriesUpdateFunction);
+                        sensorPlots.get(sensorName).initialTimer(seriesUpdateFunction);
                     }
                 }
             }
