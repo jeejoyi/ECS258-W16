@@ -42,10 +42,10 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         if(json.has("operation") && ((json.get("operation").getAsString()).equals("data"))) {
             final DataToProcess obj = GSON.fromJson(json, DataToProcess.class);
             QueuerManager.getInstance().pushPacket(ctx.channel().id().asShortText(), obj);
-            System.out.println("REC Data Received " + ctx.channel().id().asShortText());
+//            System.out.println("REC Data Received " + ctx.channel().id().asShortText());
         }
         else    {
-            System.out.println("REC hello packet");
+//            System.out.println("REC hello packet");
         }
     }
 
