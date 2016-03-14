@@ -74,7 +74,7 @@ if __name__ == '__main__':
         sys.exit(-1)
 
     ip_address = sys.argv[1]
-    uniform_pause_time_threshold = int(sys.argv[2])
+    uniform_pause_time_threshold = float(sys.argv[2])
     exponential_lambda = float(sys.argv[3])
 
     s1 = Sensor1(ip_address, uniform_pause_time_threshold, exponential_lambda)
