@@ -41,7 +41,7 @@ public class Plot extends JFrame    {
     }
 
     public Plot(final String windowTitles, final String[] plotTitles, final String[] XAxisTitles,
-                final String[] YAxisTitles, final String[][] seriesTitles) {
+                final String[] YAxisTitles, final String[][] seriesTitles, boolean[] plotTotal) {
         //set the number of plots in frame
         this.totalPlotInFrame = plotTitles.length;
 
@@ -55,7 +55,7 @@ public class Plot extends JFrame    {
 //            panel configuration
             //create a realtimeplot instance
             this.charts[i] = new RealTimeLinePlot(plotTitles[i], XAxisTitles[i], YAxisTitles[i],
-                                             new Date(), seriesTitles[i].length, seriesTitles[i],
+                                             new Date(), seriesTitles[i].length, seriesTitles[i], plotTotal[i],
                                              this.window_width/this.totalPlotInFrame, this.window_height);
 //            this.plotsPanel[i] = new JPanel();
             //create a panel to add to the frame for multiple plot
@@ -80,7 +80,7 @@ public class Plot extends JFrame    {
     }
 
     public Plot(final String windowTitles, final String plotTitles, final String XAxisTitles,
-                final String YAxisTitles, final String[] seriesTitles) {
+                final String YAxisTitles, final String[] seriesTitles, boolean plotTotal) {
         //set the number of plots in frame
         this.totalPlotInFrame = 1;
 
@@ -91,7 +91,8 @@ public class Plot extends JFrame    {
         frameSetting(windowTitles);
 
         charts[0] = new RealTimeLinePlot(plotTitles, XAxisTitles, YAxisTitles, new Date(),
-                                         seriesTitles.length, seriesTitles, this.window_width, this.window_height);
+                                         seriesTitles.length, seriesTitles, plotTotal,
+                                         this.window_width, this.window_height);
 
         add(charts[0]);
         pack();
