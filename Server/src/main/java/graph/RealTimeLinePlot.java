@@ -24,12 +24,12 @@ public class RealTimeLinePlot extends JPanel {
     private final DynamicTimeSeriesCollection dataset;
     private final JFreeChart chart;
     private final int numSeries;
-    private boolean plotTotal;
+    private boolean[] plotTotal;
     private float prevY[];
 
     public RealTimeLinePlot(final String chartTitle, final String XAxisTitle, final String YAxisTitle,
                             final Date current_Date, final int numSeries, final String[] seriesTitle,
-                            final boolean plotTotal, int width, int height) {
+                            final boolean[] plotTotal, int width, int height) {
         this.numSeries = numSeries;
         this.plotTotal = plotTotal;
         this.prevY = new float[this.numSeries];
@@ -67,13 +67,15 @@ public class RealTimeLinePlot extends JPanel {
         int currentIndex = dataset.getNewestIndex();
         dataset.advanceTime();
         for(int i = 0; i < this.numSeries; i++) {
-            if(this.plotTotal)  {
-
+            if(this.plotTotal[i])  {
+                dataset.addValue(i, currentIndex, value[i]);
             }
             else {
-                System.out.println(i + ": " + value[i]);
+                float currentValue = value[i] - prevY[i];
+                dataset.addValue(i, currentIndex, currentValue);
+                prevY[i] = value[i];
             }
-            dataset.addValue(i, currentIndex, value[i]);
+
         }
     }
 }

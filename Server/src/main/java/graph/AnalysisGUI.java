@@ -76,7 +76,7 @@ public class AnalysisGUI extends JFrame implements Runnable {
         String[][] seriesTitles = {{"Used Most Memory", "Total Memory"},
                                    {"Free", "Used"},
                                    {"Dropped", "Alive"}};
-        boolean plotTotal[] = {true, true, false};
+        boolean plotTotal[][] = {{true, true}, {true, true}, {false, true}};
         //construct the plot
         Plot serverUsage = new Plot(windowTitle, plotTitles, XAxisTitles, YAxisTitles, seriesTitles, plotTotal);
         //construct updat function for each plot
@@ -190,7 +190,8 @@ public class AnalysisGUI extends JFrame implements Runnable {
                                                    {"Dropped", "Alive", "Priority0", "Priority1", "Priority2",
                                                     "Priority3", "Priority4", "Priority5", "Priority6", "Priority7",
                                                     "Priority8", "Priority9"}};
-                        boolean plotTotal[] = {true, true};
+                        boolean plotTotal[][] = {{true},
+                                                 {true, true, true, true, true, true, true, true, true, true, true, true}};
                         sensorPlots.put(sensorName, new Plot(windowTitle, plotTitles, XAxisTitles, YAxisTitles,
                                                              seriesTitles, plotTotal));
                         //construct series update function

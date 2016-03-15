@@ -41,7 +41,7 @@ public class Plot extends JFrame    {
     }
 
     public Plot(final String windowTitles, final String[] plotTitles, final String[] XAxisTitles,
-                final String[] YAxisTitles, final String[][] seriesTitles, boolean[] plotTotal) {
+                final String[] YAxisTitles, final String[][] seriesTitles, boolean[][] plotTotal) {
         //set the number of plots in frame
         this.totalPlotInFrame = plotTitles.length;
 
@@ -80,7 +80,7 @@ public class Plot extends JFrame    {
     }
 
     public Plot(final String windowTitles, final String plotTitles, final String XAxisTitles,
-                final String YAxisTitles, final String[] seriesTitles, boolean plotTotal) {
+                final String YAxisTitles, final String[] seriesTitles, boolean[] plotTotal) {
         //set the number of plots in frame
         this.totalPlotInFrame = 1;
 
