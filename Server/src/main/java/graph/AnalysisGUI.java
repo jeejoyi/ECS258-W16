@@ -191,7 +191,7 @@ public class AnalysisGUI extends JFrame implements Runnable {
                                                     "Priority3", "Priority4", "Priority5", "Priority6", "Priority7",
                                                     "Priority8", "Priority9"}};
                         boolean plotTotal[][] = {{true},
-                                                 {true, true, true, true, true, true, true, true, true, true, true, true}};
+                                                 {false, true, true, true, true, true, true, true, true, true, true, true}};
                         sensorPlots.put(sensorName, new Plot(windowTitle, plotTitles, XAxisTitles, YAxisTitles,
                                                              seriesTitles, plotTotal));
                         //construct series update function

@@ -8,11 +8,10 @@ import java.text.NumberFormat;
 
 
 public class MemoryInfo {
-
     private enum MODE {STATIC, DYNAMIC_JVM}
 
     private final static MODE mode = MODE.STATIC;
-    private final static long staticTotalMemory = 1024 * 1024/* * 20*/; //100MB
+    private final static long staticTotalMemory = 1024 * 1024 * 20; //100MB
 
     /**
      * Gets the free memory
