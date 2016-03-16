@@ -26,7 +26,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         RemoteSensor remoteSensor = RemoteSensorManager.getInstance().addSensorChannel(ctx);
         QueuerManager.getInstance().addClient(remoteSensor);
-        System.out.println(RemoteSensorManager.getInstance().getRemoteSensorsNamesList().size());
+//        System.out.println(RemoteSensorManager.getInstance().getRemoteSensorsNamesList().size());
     }
 
     /**
