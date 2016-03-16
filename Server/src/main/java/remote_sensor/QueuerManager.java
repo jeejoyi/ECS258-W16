@@ -198,8 +198,8 @@ public class QueuerManager {
             //declare that the sensor is dead, and remove from memory
             RemoteSensorManager.getInstance().removeSensorChannel(remoteSensor);
         }
-        if(packet!=null)
-            System.out.println("Packet Time: " +packet.timestamp.getTime());
+//        if(packet!=null)
+//            System.out.println("Packet Time: " +packet.timestamp.getTime());
 
         return packet;
     }
