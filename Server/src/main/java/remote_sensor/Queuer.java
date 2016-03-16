@@ -9,10 +9,10 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class Queuer {
 
-    public static final int THRESHOLD_ACTIVATE = 80; // per cent
-    public static final int THRESHOLD_DEACTIVATE = 70; // per cent
-
-    public static final int PRIORITIES = 10; // per cent
+//    public static final int THRESHOLD_ACTIVATE = 80; // per cent
+//    public static final int THRESHOLD_DEACTIVATE = 70; // per cent
+//
+//    public static final int PRIORITIES = 10; // per cent
 
     // ###### LOCAL ######
     private final int packetsForPriority[] = new int[10];
@@ -44,7 +44,7 @@ public class Queuer {
     }
 
     public Queuer() {
-        for (Integer i = 0; i < PRIORITIES; i++) {
+        for (Integer i = 0; i < QueuerManager.PRIORITIES; i++) {
             queues.put(i, new ConcurrentLinkedDeque<DataToProcess>());
         }
     }
@@ -65,7 +65,7 @@ public class Queuer {
     }
 
     private DataToProcess deletedALowerPriority(final Integer priority) {
-        for (Integer i = 0; i < PRIORITIES; i++) {
+        for (Integer i = 0; i < QueuerManager.PRIORITIES; i++) {
             ConcurrentLinkedDeque<DataToProcess> q = queues.get(i);
             if (!q.isEmpty()) {
                 DataToProcess packet = null;
@@ -84,7 +84,7 @@ public class Queuer {
     }
 
     private Boolean canInsert(DataToProcess dataToProcess) {
-        if (MemoryInfo.usedPercentage() > THRESHOLD_ACTIVATE) {
+        if (MemoryInfo.usedPercentage() > QueuerManager.THRESHOLD_ACTIVATE) {
             // if we can't free memory to insert the current one, we can't insert it
             if (hasDeletedALowerPriority(dataToProcess.priority) == false)
                 return false;
@@ -105,7 +105,7 @@ public class Queuer {
      * @param packet
      */
     public void push(DataToProcess packet) {
-        if (packet.priority >= PRIORITIES) {
+        if (packet.priority >= QueuerManager.PRIORITIES) {
             // you can't insert data with a priority higher than the highest allowed
             return;
         }
@@ -120,7 +120,7 @@ public class Queuer {
 
     private DataToProcess getEldestInLine() {
         DataToProcess oldest = null;
-        for (Integer i = 0; i < PRIORITIES; i++) {
+        for (Integer i = 0; i < QueuerManager.PRIORITIES; i++) {
             ConcurrentLinkedDeque<DataToProcess> q = queues.get(i);
             if (!q.isEmpty()) {
                 if (oldest == null)

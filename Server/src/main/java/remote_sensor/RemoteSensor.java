@@ -106,7 +106,7 @@ public class RemoteSensor {
      * Tells to the client that can send messages with an higher priority
      */
     public void increaseWorkingPriority(int levels) {
-        if (priority < Queuer.PRIORITIES) {
+        if (priority < QueuerManager.PRIORITIES) {
             priority += levels;
             sendSetPriority();
         }
