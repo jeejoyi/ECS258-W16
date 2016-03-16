@@ -28,7 +28,7 @@ class Sensor1(Master_Client):
     def generate_random_data(self):
         # generate random message lenght by exp
         random_length = random.expovariate(self.message_len_lambda)
-        message = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(int(random_length)))
+        message = ''.join(random.choice("QWERTYUIOPASDFGHJKLZXCVBNM") for _ in range(int(random_length)))
         # print(random_length, message)
         return message
 
